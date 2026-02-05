@@ -1,6 +1,7 @@
-# QDK/Chemistry Data
+# QDK/Chemistry-Data 
+*Simulation Data generated via the Microsoft Quantum Development Kit for Chemistry (QDK/Chemistry)*
 
-QDK/Chemistry Data is an open-source data repository within the [Azure Quantum Development Kit (QDK)](https://github.com/microsoft/qdk).
+QDK/Chemistry Data is an open-source data repository within the [Microsoft Quantum Development Kit (QDK)](https://github.com/microsoft/qdk).
 It provides curated quantum chemistry simulation data, molecular benchmarks, and reference datasets for use with [QDK/Chemistry](https://github.com/microsoft/qdk-chemistry).
 
 ## Overview
@@ -11,6 +12,12 @@ QDK/Chemistry Data provides:
 - Benchmark datasets for quantum chemistry algorithms
 - Reference Hamiltonians and orbital data
 - Schema definitions for data validation
+
+## Datasets
+
+| Dataset | Description | Molecules |
+|---------|-------------|-----------|
+| [SparseCI-24](data/molecules/SparseCI-24/) | Molecules with compact sparse CI wavefunctions (≤6 determinants, <1 mHa accuracy) | 24 |
 
 ## Contributing
 

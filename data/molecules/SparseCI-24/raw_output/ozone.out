@@ -1,0 +1,131 @@
+=== WORKFLOW START ===
+Start: 2026-01-21T07:16:35.621385
+Command: python sample_sci_workflow.py --xyz Validation-2026-01-20-aab310b108342456bf6b1017d01ccb8e31d2d52d/structures/1_molecules/ozone.structure.xyz --initial-active-space-solver macis_asci --autocas --max-determinants 100
+
+[2026-01-21 07:16:38.352179] [info] [sample_sci_workflow] Structure Summary:
+  Number of atoms: 3
+  Composition: O3
+  Total mass: 47.997 AMU
+  Nuclear Repulsion Energy: 70.366 Eh
+
+[2026-01-21 07:16:41.957203] [info] [sample_sci_workflow] SCF energy = -224.27419044 Hartree
+[2026-01-21 07:16:41.959158] [info] [qdk:chemistry:algorithms:microsoft:active_space:valence_active_space] ValenceActiveSpaceSelector::Starting active space selection.
+[2026-01-21 07:16:41.960838] [info] [qdk:chemistry:algorithms:microsoft:active_space:valence_active_space] ValenceActiveSpaceSelector::Selected active space of 12 orbitals: 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+[2026-01-21 07:16:41.963014] [info] [sample_sci_workflow] Orbitals Summary:
+  AOs: 42
+  MOs: 42
+  Type: Restricted
+  Has overlap: Yes
+  Has basis set: Yes
+  Valid: Yes
+  Has active space: Yes
+  Active Orbitals: α=12, β=12
+  Has inactive space: Yes
+  Inactive Orbitals: α=3, β=3
+  Virtual Orbitals: α=27, β=27
+
+[2026-01-21 07:16:43.117240] [info] [sample_sci_workflow] Hamiltonian Summary:
+  Type: Hermitian
+  Restrictedness: Restricted
+  Active Orbitals: 12
+  Total Orbitals: 42
+  Core Energy: -137.736684
+  Integral Statistics:
+    One-body Integrals (alpha): 144 (larger than 0.000001: 70)
+    Two-body Integrals (aaaa): 20736 (larger than 0.000001: 6192)
+
+[2026-01-21 07:16:43.119313] [info] [qdk:chemistry:algorithms:microsoft:macis_asci] Requested number of determinants (100000) exceeds FCI dimension (48400).
+[2026-01-21 07:16:43.119] [ci_solver] [info] [Selected CI Solver]:
+[2026-01-21 07:16:43.120] [ci_solver] [info]   NDETS =  48400, MATEL_TOL = 2.22045e-16, RES_TOL = 1.00000e-06, MAX_SUB =  200
+[2026-01-21 07:16:43.657] [ci_solver] [info]   NNZ   = 32557312, H_DUR     = 5.37148e+02 ms
+[2026-01-21 07:16:43.657] [ci_solver] [info]   HMEM_LOC = 6.65e-01 GiB
+[2026-01-21 07:16:43.657] [ci_solver] [info]   H_SPARSE = 1.39e+00%
+[2026-01-21 07:16:43.677] [ci_solver] [info]   * Will generate identity guess
+[2026-01-21 07:16:43.697] [davidson] [info] [Davidson Eigensolver]:
+[2026-01-21 07:16:43.697] [davidson] [info]   N =  48400, MAX_M =  200, RES_TOL = 1.00000e-06
+[2026-01-21 07:16:43.730] [davidson] [info] iter =    1, LAM(0) =  -8.666602013391e+01, RNORM =   2.579155910713e-01
+[2026-01-21 07:16:43.736] [davidson] [info] iter =    2, LAM(0) =  -8.670343819207e+01, RNORM =   1.338139721216e-01
+[2026-01-21 07:16:43.747] [davidson] [info] iter =    3, LAM(0) =  -8.671040355546e+01, RNORM =   7.850277471234e-02
+[2026-01-21 07:16:43.777] [davidson] [info] iter =    4, LAM(0) =  -8.671251154604e+01, RNORM =   4.277055024599e-02
+[2026-01-21 07:16:43.802] [davidson] [info] iter =    5, LAM(0) =  -8.671327380233e+01, RNORM =   2.015538867636e-02
+[2026-01-21 07:16:43.840] [davidson] [info] iter =    6, LAM(0) =  -8.671344809871e+01, RNORM =   8.863417777543e-03
+[2026-01-21 07:16:43.879] [davidson] [info] iter =    7, LAM(0) =  -8.671347356779e+01, RNORM =   4.290724614474e-03
+[2026-01-21 07:16:43.918] [davidson] [info] iter =    8, LAM(0) =  -8.671347953091e+01, RNORM =   1.766954275205e-03
+[2026-01-21 07:16:43.951] [davidson] [info] iter =    9, LAM(0) =  -8.671348055428e+01, RNORM =   8.929443682765e-04
+[2026-01-21 07:16:44.005] [davidson] [info] iter =   10, LAM(0) =  -8.671348081514e+01, RNORM =   4.131631312464e-04
+[2026-01-21 07:16:44.049] [davidson] [info] iter =   11, LAM(0) =  -8.671348087083e+01, RNORM =   1.819984601303e-04
+[2026-01-21 07:16:44.097] [davidson] [info] iter =   12, LAM(0) =  -8.671348088274e+01, RNORM =   7.658151377427e-05
+[2026-01-21 07:16:44.140] [davidson] [info] iter =   13, LAM(0) =  -8.671348088513e+01, RNORM =   3.579878606744e-05
+[2026-01-21 07:16:44.183] [davidson] [info] iter =   14, LAM(0) =  -8.671348088572e+01, RNORM =   2.005900173168e-05
+[2026-01-21 07:16:44.227] [davidson] [info] iter =   15, LAM(0) =  -8.671348088589e+01, RNORM =   1.124644253927e-05
+[2026-01-21 07:16:44.270] [davidson] [info] iter =   16, LAM(0) =  -8.671348088593e+01, RNORM =   5.992135877272e-06
+[2026-01-21 07:16:44.322] [davidson] [info] iter =   17, LAM(0) =  -8.671348088595e+01, RNORM =   3.152176518298e-06
+[2026-01-21 07:16:44.372] [davidson] [info] iter =   18, LAM(0) =  -8.671348088595e+01, RNORM =   1.693377782495e-06
+[2026-01-21 07:16:44.415] [davidson] [info] iter =   19, LAM(0) =  -8.671348088595e+01, RNORM =   8.222563578338e-07
+[2026-01-21 07:16:44.415] [davidson] [info] Davidson Converged!
+[2026-01-21 07:16:44.416] [ci_solver] [info]   DAV_NITER =   19, E0 = -8.671348e+01 Eh, DAVIDSON_DUR = 7.18837e+02 ms
+[2026-01-21 07:16:47.645614] [info] [sample_sci_workflow] CASCI energy = -224.45016461 Hartree
+[2026-01-21 07:16:47.646039] [info] [qdk:chemistry:algorithms:microsoft:active_space:autocas_active_space] AutoCAS::Starting active space selection.
+[2026-01-21 07:16:47.647490] [info] [qdk:chemistry:algorithms:active_space] Max entropy: 0.528751
+[2026-01-21 07:16:47.648001] [info] [qdk:chemistry:algorithms:active_space] Normalized orbital entropies:
+[2026-01-21 07:16:47.648008] [info] [qdk:chemistry:algorithms:active_space]   Orbital index   Normalized Entropy   Raw Entropy
+[2026-01-21 07:16:47.648019] [info] [qdk:chemistry:algorithms:active_space]              12             1.000000      0.528751
+[2026-01-21 07:16:47.648024] [info] [qdk:chemistry:algorithms:active_space]              11             0.797285      0.421565
+[2026-01-21 07:16:47.648029] [info] [qdk:chemistry:algorithms:active_space]              13             0.404911      0.214097
+[2026-01-21 07:16:47.648034] [info] [qdk:chemistry:algorithms:active_space]              14             0.369693      0.195475
+[2026-01-21 07:16:47.648039] [info] [qdk:chemistry:algorithms:active_space]               8             0.344810      0.182319
+[2026-01-21 07:16:47.648044] [info] [qdk:chemistry:algorithms:active_space]               7             0.247376      0.130800
+[2026-01-21 07:16:47.648049] [info] [qdk:chemistry:algorithms:active_space]              10             0.218230      0.115389
+[2026-01-21 07:16:47.648055] [info] [qdk:chemistry:algorithms:active_space]               6             0.152830      0.080809
+[2026-01-21 07:16:47.648060] [info] [qdk:chemistry:algorithms:active_space]               9             0.142014      0.075090
+[2026-01-21 07:16:47.648065] [info] [qdk:chemistry:algorithms:active_space]               4             0.094124      0.049768
+[2026-01-21 07:16:47.648070] [info] [qdk:chemistry:algorithms:active_space]               3             0.075299      0.039815
+[2026-01-21 07:16:47.648075] [info] [qdk:chemistry:algorithms:active_space]               5             0.054210      0.028663
+[2026-01-21 07:16:47.648297] [info] [qdk:chemistry:algorithms:microsoft:active_space:autocas_active_space] Identified 3 plateaus.
+[2026-01-21 07:16:47.649121] [info] [qdk:chemistry:algorithms:microsoft:active_space:autocas_active_space] AutoCAS::Selected active space of 5 orbitals: 8, 11, 12, 13, 14
+[2026-01-21 07:16:47.649853] [info] [sample_sci_workflow] AutoCAS selected active space with indices: [8, 11, 12, 13, 14]
+[2026-01-21 07:16:48.684447] [info] [qdk:chemistry:algorithms:microsoft:macis_asci] Requested number of determinants (100000) exceeds FCI dimension (100).
+[2026-01-21 07:16:48.684] [ci_solver] [info] [Selected CI Solver]:
+[2026-01-21 07:16:48.684] [ci_solver] [info]   NDETS =    100, MATEL_TOL = 2.22045e-16, RES_TOL = 1.00000e-06, MAX_SUB =  200
+[2026-01-21 07:16:48.685] [ci_solver] [info]   NNZ   =   3832, H_DUR     = 1.03572e+00 ms
+[2026-01-21 07:16:48.695] [ci_solver] [info]   HMEM_LOC = 8.09e-05 GiB
+[2026-01-21 07:16:48.695] [ci_solver] [info]   H_SPARSE = 3.83e+01%
+[2026-01-21 07:16:48.695] [ci_solver] [info]   * Will generate identity guess
+[2026-01-21 07:16:48.695] [davidson] [info] [Davidson Eigensolver]:
+[2026-01-21 07:16:48.695] [davidson] [info]   N =    100, MAX_M =  100, RES_TOL = 1.00000e-06
+[2026-01-21 07:16:48.696] [davidson] [info] iter =    1, LAM(0) =  -5.199558827554e+00, RNORM =   7.748271233007e-02
+[2026-01-21 07:16:48.696] [davidson] [info] iter =    2, LAM(0) =  -5.210493596752e+00, RNORM =   3.434459305693e-02
+[2026-01-21 07:16:48.696] [davidson] [info] iter =    3, LAM(0) =  -5.211214943392e+00, RNORM =   6.907370898649e-03
+[2026-01-21 07:16:48.696] [davidson] [info] iter =    4, LAM(0) =  -5.211245704643e+00, RNORM =   1.144870285444e-03
+[2026-01-21 07:16:48.696] [davidson] [info] iter =    5, LAM(0) =  -5.211246605534e+00, RNORM =   1.549534120879e-04
+[2026-01-21 07:16:48.726] [davidson] [info] iter =    6, LAM(0) =  -5.211246626936e+00, RNORM =   4.073035356837e-05
+[2026-01-21 07:16:48.747] [davidson] [info] iter =    7, LAM(0) =  -5.211246628211e+00, RNORM =   5.334748562863e-06
+[2026-01-21 07:16:48.768] [davidson] [info] iter =    8, LAM(0) =  -5.211246628228e+00, RNORM =   5.814968886527e-07
+[2026-01-21 07:16:48.768] [davidson] [info] Davidson Converged!
+[2026-01-21 07:16:48.768] [ci_solver] [info]   DAV_NITER =    8, E0 = -5.211247e+00 Eh, DAVIDSON_DUR = 7.27410e+01 ms
+[2026-01-21 07:16:48.786435] [info] [sample_sci_workflow] Hamiltonian Summary:
+  Type: Hermitian
+  Restrictedness: Restricted
+  Active Orbitals: 5
+  Total Orbitals: 42
+  Core Energy: -219.134216
+  Integral Statistics:
+    One-body Integrals (alpha): 25 (larger than 0.000001: 7)
+    Two-body Integrals (aaaa): 625 (larger than 0.000001: 165)
+
+[2026-01-21 07:16:48.786912] [info] [sample_sci_workflow] AutoCAS energy = -224.34546305 Hartree
+[2026-01-21 07:16:48.982441] [info] [qdk_chemistry.utils.wavefunction] Sparse CI finder (6 dets) = -224.34477916 Hartree (ΔE = 0.6839 mHartree)
+[2026-01-21 07:16:48.983746] [info] [sample_sci_workflow] Sparse CI energy = -224.34477916 Hartree
+[2026-01-21 07:16:48.984723] [info] [sample_sci_workflow] Stored wavefunction with 6 determinants
+Determinants:
+  22000: -0.93756298
+  20200: 0.32348548
+  02200: 0.09466198
+  d2u00: 0.05969543
+  u2d00: 0.05969543
+  02020: 0.01564668
+
+
+=== WORKFLOW END ===
+End: 2026-01-21T07:16:49.595783
+Elapsed seconds: 13.974372

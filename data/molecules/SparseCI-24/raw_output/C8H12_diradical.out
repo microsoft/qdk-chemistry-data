@@ -1,0 +1,444 @@
+=== WORKFLOW START ===
+Start: 2026-01-21T07:55:24.158351
+Command: python sample_sci_workflow.py --xyz Validation-2026-01-20-aab310b108342456bf6b1017d01ccb8e31d2d52d/structures/3_diradicals/C8H12_diradical.structure.xyz --initial-active-space-solver macis_asci --autocas --max-determinants 100
+
+[2026-01-21 07:55:26.967395] [info] [sample_sci_workflow] Structure Summary:
+  Number of atoms: 20
+  Composition: H12, C8
+  Total mass: 108.184 AMU
+  Nuclear Repulsion Energy: 325.678 Eh
+
+[2026-01-21 07:55:33.876415] [info] [sample_sci_workflow] SCF energy = -309.72615404 Hartree
+[2026-01-21 07:55:33.878264] [info] [qdk:chemistry:algorithms:microsoft:active_space:valence_active_space] ValenceActiveSpaceSelector::Starting active space selection.
+[2026-01-21 07:55:33.878590] [info] [qdk:chemistry:algorithms:microsoft:active_space:valence_active_space] ValenceActiveSpaceSelector::Selected active space of 44 orbitals: 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51
+[2026-01-21 07:55:33.881555] [info] [sample_sci_workflow] Orbitals Summary:
+  AOs: 172
+  MOs: 172
+  Type: Restricted
+  Has overlap: Yes
+  Has basis set: Yes
+  Valid: Yes
+  Has active space: Yes
+  Active Orbitals: α=44, β=44
+  Has inactive space: Yes
+  Inactive Orbitals: α=8, β=8
+  Virtual Orbitals: α=120, β=120
+
+[2026-01-21 07:57:25.091812] [info] [sample_sci_workflow] Hamiltonian Summary:
+  Type: Hermitian
+  Restrictedness: Restricted
+  Active Orbitals: 44
+  Total Orbitals: 172
+  Core Energy: -83.326130
+  Integral Statistics:
+    One-body Integrals (alpha): 1936 (larger than 0.000001: 1936)
+    Two-body Integrals (aaaa): 3748096 (larger than 0.000001: 3743732)
+
+[2026-01-21 07:57:25.117] [asci_grow] [info] [ASCI Grow Settings]:
+[2026-01-21 07:57:25.117] [asci_grow] [info]   NTDETS_MAX = 100000, NCDETS_MAX =    100, GROW_FACTOR = 8
+[2026-01-21 07:57:25.117] [asci_grow] [info] iter =    0, E0 =  -2.264000240367e+02, dE =   0.000000e+00, WFN_SIZE = 1
+[2026-01-21 07:57:25.117] [asci_search] [info] [ASCI Search Settings]:
+[2026-01-21 07:57:25.117] [asci_search] [info]   NCDETS =      1, NDETS_MAX =       100, H_EL_TOL = 1.000000e-08, RV_TOL = 1.000000e-08
+[2026-01-21 07:57:25.117] [asci_search] [info]   MAX_RV_SIZE = 500000000, JUST_SINGLES = false
+[2026-01-21 07:57:25.117] [asci_search] [info]   CDET_SUM = 1.00e+00
+[2026-01-21 07:57:25.117] [asci_search] [info]   * Will Generate up to Quintuplets
+[2026-01-21 07:57:25.163] [asci_search] [info]   * GEN_DUR = 4.60e+01 ms
+[2026-01-21 07:57:25.363] [asci_search] [info]   * ASCI Kept 341881 Pairs
+[2026-01-21 07:57:25.363] [asci_search] [info]   * Pairs Mem = 1.02e-02 GiB
+[2026-01-21 07:57:25.378] [asci_search] [info]   * ASCI will search over 341881 unique determinants
+[2026-01-21 07:57:25.378] [asci_search] [info]   * PAIR_DUR = 2.46e-01 s, SORT_ACC_DUR = 1.49e-02 s
+[2026-01-21 07:57:25.378] [asci_search] [info]   * KEEP_LARG_DUR = 5.33e-04 s
+[2026-01-21 07:57:25.386] [asci_search] [info]   * Kth Score Pivot = 1.5313010878155300e-02
+[2026-01-21 07:57:25.387] [asci_search] [info]   * ASCI_SORT_DUR = 8.07e-03 s
+[2026-01-21 07:57:25.387] [asci_search] [info]   * New Dets Mem = 1.49e-06 GiB
+[2026-01-21 07:57:25.387] [asci_search] [info]   * ASCI_SEARCH DUR = 2.70e-01 s
+[2026-01-21 07:57:25.387] [ci_solver] [info] [Selected CI Solver]:
+[2026-01-21 07:57:25.387] [ci_solver] [info]   NDETS =    100, MATEL_TOL = 2.22045e-16, RES_TOL = 1.00000e-06, MAX_SUB =  200
+[2026-01-21 07:57:25.514] [ci_solver] [info]   NNZ   =   4242, H_DUR     = 1.26758e+02 ms
+[2026-01-21 07:57:25.514] [ci_solver] [info]   HMEM_LOC = 6.40e-05 GiB
+[2026-01-21 07:57:25.514] [ci_solver] [info]   H_SPARSE = 4.24e+01%
+[2026-01-21 07:57:25.514] [ci_solver] [info]   * Will generate identity guess
+[2026-01-21 07:57:25.514] [davidson] [info] [Davidson Eigensolver]:
+[2026-01-21 07:57:25.514] [davidson] [info]   N =    100, MAX_M =  100, RES_TOL = 1.00000e-06
+[2026-01-21 07:57:25.549] [davidson] [info] iter =    1, LAM(0) =  -2.264663062938e+02, RNORM =   1.227446802304e-01
+[2026-01-21 07:57:25.572] [davidson] [info] iter =    2, LAM(0) =  -2.265136796194e+02, RNORM =   4.569554383999e-02
+[2026-01-21 07:57:25.594] [davidson] [info] iter =    3, LAM(0) =  -2.265178043365e+02, RNORM =   8.950031594153e-03
+[2026-01-21 07:57:25.618] [davidson] [info] iter =    4, LAM(0) =  -2.265179755638e+02, RNORM =   2.022547217943e-03
+[2026-01-21 07:57:25.652] [davidson] [info] iter =    5, LAM(0) =  -2.265179839048e+02, RNORM =   3.851470892808e-04
+[2026-01-21 07:57:25.664] [davidson] [info] iter =    6, LAM(0) =  -2.265179842114e+02, RNORM =   4.350615215726e-05
+[2026-01-21 07:57:25.693] [davidson] [info] iter =    7, LAM(0) =  -2.265179842149e+02, RNORM =   5.122234631982e-06
+[2026-01-21 07:57:25.716] [davidson] [info] iter =    8, LAM(0) =  -2.265179842150e+02, RNORM =   8.384116699975e-07
+[2026-01-21 07:57:25.716] [davidson] [info] Davidson Converged!
+[2026-01-21 07:57:25.716] [ci_solver] [info]   DAV_NITER =    8, E0 = -2.265180e+02 Eh, DAVIDSON_DUR = 2.02026e+02 ms
+[2026-01-21 07:57:25.716] [asci_grow] [info] iter =    1, E0 =  -2.265179842150e+02, dE =  -1.179602e-01, WFN_SIZE = 100
+[2026-01-21 07:57:25.717] [asci_search] [info] [ASCI Search Settings]:
+[2026-01-21 07:57:25.717] [asci_search] [info]   NCDETS =    100, NDETS_MAX =       800, H_EL_TOL = 1.000000e-08, RV_TOL = 1.000000e-08
+[2026-01-21 07:57:25.717] [asci_search] [info]   MAX_RV_SIZE = 500000000, JUST_SINGLES = false
+[2026-01-21 07:57:25.717] [asci_search] [info]   CDET_SUM = 1.00e+00
+[2026-01-21 07:57:25.727] [asci_search] [info]   * Will Generate up to Quintuplets
+[2026-01-21 07:57:25.741] [asci_search] [info]   * GEN_DUR = 1.36e+01 ms
+[2026-01-21 07:57:34.746] [asci_search] [info]   * ASCI Kept 26789080 Pairs
+[2026-01-21 07:57:34.746] [asci_search] [info]   * Pairs Mem = 7.98e-01 GiB
+[2026-01-21 07:57:36.505] [asci_search] [info]   * ASCI will search over 26789080 unique determinants
+[2026-01-21 07:57:36.505] [asci_search] [info]   * PAIR_DUR = 9.03e+00 s, SORT_ACC_DUR = 1.76e+00 s
+[2026-01-21 07:57:36.560] [asci_search] [info]   * KEEP_LARG_DUR = 5.44e-02 s
+[2026-01-21 07:57:36.823] [asci_search] [info]   * Kth Score Pivot = 3.1727497318334756e-03
+[2026-01-21 07:57:36.937] [asci_search] [info]   * ASCI_SORT_DUR = 3.77e-01 s
+[2026-01-21 07:57:36.937] [asci_search] [info]   * New Dets Mem = 1.19e-05 GiB
+[2026-01-21 07:57:36.937] [asci_search] [info]   * ASCI_SEARCH DUR = 1.12e+01 s
+[2026-01-21 07:57:36.937] [ci_solver] [info] [Selected CI Solver]:
+[2026-01-21 07:57:36.937] [ci_solver] [info]   NDETS =    800, MATEL_TOL = 2.22045e-16, RES_TOL = 1.00000e-06, MAX_SUB =  200
+[2026-01-21 07:57:37.057] [ci_solver] [info]   NNZ   =  89642, H_DUR     = 1.20098e+02 ms
+[2026-01-21 07:57:37.057] [ci_solver] [info]   HMEM_LOC = 1.34e-03 GiB
+[2026-01-21 07:57:37.057] [ci_solver] [info]   H_SPARSE = 1.40e+01%
+[2026-01-21 07:57:37.058] [ci_solver] [info]   * Will generate identity guess
+[2026-01-21 07:57:37.058] [davidson] [info] [Davidson Eigensolver]:
+[2026-01-21 07:57:37.058] [davidson] [info]   N =    800, MAX_M =  200, RES_TOL = 1.00000e-06
+[2026-01-21 07:57:37.103] [davidson] [info] iter =    1, LAM(0) =  -2.264650426640e+02, RNORM =   1.751788501336e-01
+[2026-01-21 07:57:37.126] [davidson] [info] iter =    2, LAM(0) =  -2.265326254352e+02, RNORM =   1.037661612190e-01
+[2026-01-21 07:57:37.148] [davidson] [info] iter =    3, LAM(0) =  -2.265477547681e+02, RNORM =   2.794987024237e-02
+[2026-01-21 07:57:37.171] [davidson] [info] iter =    4, LAM(0) =  -2.265488130946e+02, RNORM =   9.566140563736e-03
+[2026-01-21 07:57:37.194] [davidson] [info] iter =    5, LAM(0) =  -2.265489670038e+02, RNORM =   3.434422045432e-03
+[2026-01-21 07:57:37.217] [davidson] [info] iter =    6, LAM(0) =  -2.265489883687e+02, RNORM =   1.418231073270e-03
+[2026-01-21 07:57:37.240] [davidson] [info] iter =    7, LAM(0) =  -2.265489914438e+02, RNORM =   4.268266313801e-04
+[2026-01-21 07:57:37.264] [davidson] [info] iter =    8, LAM(0) =  -2.265489916812e+02, RNORM =   1.168582816058e-04
+[2026-01-21 07:57:37.288] [davidson] [info] iter =    9, LAM(0) =  -2.265489916979e+02, RNORM =   3.601529743852e-05
+[2026-01-21 07:57:37.310] [davidson] [info] iter =   10, LAM(0) =  -2.265489916997e+02, RNORM =   1.236093600335e-05
+[2026-01-21 07:57:37.333] [davidson] [info] iter =   11, LAM(0) =  -2.265489917000e+02, RNORM =   3.894457809847e-06
+[2026-01-21 07:57:37.357] [davidson] [info] iter =   12, LAM(0) =  -2.265489917000e+02, RNORM =   1.724696999221e-06
+[2026-01-21 07:57:37.380] [davidson] [info] iter =   13, LAM(0) =  -2.265489917000e+02, RNORM =   4.920682926606e-07
+[2026-01-21 07:57:37.380] [davidson] [info] Davidson Converged!
+[2026-01-21 07:57:37.380] [ci_solver] [info]   DAV_NITER =   13, E0 = -2.265490e+02 Eh, DAVIDSON_DUR = 3.22812e+02 ms
+[2026-01-21 07:57:37.381] [asci_grow] [info] iter =    2, E0 =  -2.265489917000e+02, dE =  -3.100749e-02, WFN_SIZE = 800
+[2026-01-21 07:57:37.381] [asci_search] [info] [ASCI Search Settings]:
+[2026-01-21 07:57:37.381] [asci_search] [info]   NCDETS =    100, NDETS_MAX =      6400, H_EL_TOL = 1.000000e-08, RV_TOL = 1.000000e-08
+[2026-01-21 07:57:37.381] [asci_search] [info]   MAX_RV_SIZE = 500000000, JUST_SINGLES = false
+[2026-01-21 07:57:37.381] [asci_search] [info]   CDET_SUM = 9.77e-01
+[2026-01-21 07:57:37.382] [asci_search] [info]   * Will Generate up to Quintuplets
+[2026-01-21 07:57:37.404] [asci_search] [info]   * GEN_DUR = 2.24e+01 ms
+[2026-01-21 07:57:46.759] [asci_search] [info]   * ASCI Kept 27004773 Pairs
+[2026-01-21 07:57:46.760] [asci_search] [info]   * Pairs Mem = 8.05e-01 GiB
+[2026-01-21 07:57:48.640] [asci_search] [info]   * ASCI will search over 27004773 unique determinants
+[2026-01-21 07:57:48.640] [asci_search] [info]   * PAIR_DUR = 9.38e+00 s, SORT_ACC_DUR = 1.88e+00 s
+[2026-01-21 07:57:48.727] [asci_search] [info]   * KEEP_LARG_DUR = 8.65e-02 s
+[2026-01-21 07:57:49.141] [asci_search] [info]   * Kth Score Pivot = 1.2590839157891756e-03
+[2026-01-21 07:57:49.325] [asci_search] [info]   * ASCI_SORT_DUR = 5.99e-01 s
+[2026-01-21 07:57:49.326] [asci_search] [info]   * New Dets Mem = 9.54e-05 GiB
+[2026-01-21 07:57:49.326] [asci_search] [info]   * ASCI_SEARCH DUR = 1.19e+01 s
+[2026-01-21 07:57:49.326] [ci_solver] [info] [Selected CI Solver]:
+[2026-01-21 07:57:49.326] [ci_solver] [info]   NDETS =   6400, MATEL_TOL = 2.22045e-16, RES_TOL = 1.00000e-06, MAX_SUB =  200
+[2026-01-21 07:57:49.495] [ci_solver] [info]   NNZ   = 1449490, H_DUR     = 1.68160e+02 ms
+[2026-01-21 07:57:49.495] [ci_solver] [info]   HMEM_LOC = 2.16e-02 GiB
+[2026-01-21 07:57:49.495] [ci_solver] [info]   H_SPARSE = 3.54e+00%
+[2026-01-21 07:57:49.496] [ci_solver] [info]   * Will generate identity guess
+[2026-01-21 07:57:49.497] [davidson] [info] [Davidson Eigensolver]:
+[2026-01-21 07:57:49.499] [davidson] [info]   N =   6400, MAX_M =  200, RES_TOL = 1.00000e-06
+[2026-01-21 07:57:49.539] [davidson] [info] iter =    1, LAM(0) =  -2.264810355269e+02, RNORM =   1.825682539645e-01
+[2026-01-21 07:57:49.562] [davidson] [info] iter =    2, LAM(0) =  -2.265485393062e+02, RNORM =   1.422919616377e-01
+[2026-01-21 07:57:49.582] [davidson] [info] iter =    3, LAM(0) =  -2.265701797368e+02, RNORM =   4.283683419644e-02
+[2026-01-21 07:57:49.583] [davidson] [info] iter =    4, LAM(0) =  -2.265720388334e+02, RNORM =   1.317911508376e-02
+[2026-01-21 07:57:49.583] [davidson] [info] iter =    5, LAM(0) =  -2.265722430802e+02, RNORM =   4.575914339980e-03
+[2026-01-21 07:57:49.597] [davidson] [info] iter =    6, LAM(0) =  -2.265722697790e+02, RNORM =   1.794875446968e-03
+[2026-01-21 07:57:49.609] [davidson] [info] iter =    7, LAM(0) =  -2.265722738874e+02, RNORM =   6.756735563823e-04
+[2026-01-21 07:57:49.642] [davidson] [info] iter =    8, LAM(0) =  -2.265722743554e+02, RNORM =   1.936395147940e-04
+[2026-01-21 07:57:49.659] [davidson] [info] iter =    9, LAM(0) =  -2.265722743919e+02, RNORM =   6.005178485734e-05
+[2026-01-21 07:57:49.681] [davidson] [info] iter =   10, LAM(0) =  -2.265722743951e+02, RNORM =   1.958849694122e-05
+[2026-01-21 07:57:49.702] [davidson] [info] iter =   11, LAM(0) =  -2.265722743955e+02, RNORM =   8.368153355844e-06
+[2026-01-21 07:57:49.724] [davidson] [info] iter =   12, LAM(0) =  -2.265722743956e+02, RNORM =   3.879827845110e-06
+[2026-01-21 07:57:49.748] [davidson] [info] iter =   13, LAM(0) =  -2.265722743956e+02, RNORM =   1.326330583259e-06
+[2026-01-21 07:57:49.781] [davidson] [info] iter =   14, LAM(0) =  -2.265722743956e+02, RNORM =   4.668754596860e-07
+[2026-01-21 07:57:49.781] [davidson] [info] Davidson Converged!
+[2026-01-21 07:57:49.781] [ci_solver] [info]   DAV_NITER =   14, E0 = -2.265723e+02 Eh, DAVIDSON_DUR = 2.84642e+02 ms
+[2026-01-21 07:57:49.781] [asci_grow] [info] iter =    3, E0 =  -2.265722743956e+02, dE =  -2.328270e-02, WFN_SIZE = 6400
+[2026-01-21 07:57:49.782] [asci_search] [info] [ASCI Search Settings]:
+[2026-01-21 07:57:49.782] [asci_search] [info]   NCDETS =    100, NDETS_MAX =     51200, H_EL_TOL = 1.000000e-08, RV_TOL = 1.000000e-08
+[2026-01-21 07:57:49.782] [asci_search] [info]   MAX_RV_SIZE = 500000000, JUST_SINGLES = false
+[2026-01-21 07:57:49.782] [asci_search] [info]   CDET_SUM = 9.61e-01
+[2026-01-21 07:57:49.783] [asci_search] [info]   * Will Generate up to Quintuplets
+[2026-01-21 07:57:49.796] [asci_search] [info]   * GEN_DUR = 1.30e+01 ms
+[2026-01-21 07:57:59.319] [asci_search] [info]   * ASCI Kept 27065214 Pairs
+[2026-01-21 07:57:59.319] [asci_search] [info]   * Pairs Mem = 8.07e-01 GiB
+[2026-01-21 07:58:01.446] [asci_search] [info]   * ASCI will search over 27065214 unique determinants
+[2026-01-21 07:58:01.446] [asci_search] [info]   * PAIR_DUR = 9.54e+00 s, SORT_ACC_DUR = 2.13e+00 s
+[2026-01-21 07:58:01.533] [asci_search] [info]   * KEEP_LARG_DUR = 8.69e-02 s
+[2026-01-21 07:58:02.039] [asci_search] [info]   * Kth Score Pivot = 5.1453245458337198e-04
+[2026-01-21 07:58:02.229] [asci_search] [info]   * ASCI_SORT_DUR = 6.96e-01 s
+[2026-01-21 07:58:02.230] [asci_search] [info]   * New Dets Mem = 7.63e-04 GiB
+[2026-01-21 07:58:02.230] [asci_search] [info]   * ASCI_SEARCH DUR = 1.24e+01 s
+[2026-01-21 07:58:02.235] [ci_solver] [info] [Selected CI Solver]:
+[2026-01-21 07:58:02.235] [ci_solver] [info]   NDETS =  51200, MATEL_TOL = 2.22045e-16, RES_TOL = 1.00000e-06, MAX_SUB =  200
+[2026-01-21 07:58:04.537] [ci_solver] [info]   NNZ   = 28127872, H_DUR     = 2.30260e+03 ms
+[2026-01-21 07:58:04.537] [ci_solver] [info]   HMEM_LOC = 4.20e-01 GiB
+[2026-01-21 07:58:04.537] [ci_solver] [info]   H_SPARSE = 1.07e+00%
+[2026-01-21 07:58:04.571] [ci_solver] [info]   * Will generate identity guess
+[2026-01-21 07:58:04.606] [davidson] [info] [Davidson Eigensolver]:
+[2026-01-21 07:58:04.606] [davidson] [info]   N =  51200, MAX_M =  200, RES_TOL = 1.00000e-06
+[2026-01-21 07:58:04.635] [davidson] [info] iter =    1, LAM(0) =  -2.265240987661e+02, RNORM =   1.740795541660e-01
+[2026-01-21 07:58:04.640] [davidson] [info] iter =    2, LAM(0) =  -2.265816354267e+02, RNORM =   1.680454611863e-01
+[2026-01-21 07:58:04.652] [davidson] [info] iter =    3, LAM(0) =  -2.266066209662e+02, RNORM =   5.798636509129e-02
+[2026-01-21 07:58:04.671] [davidson] [info] iter =    4, LAM(0) =  -2.266097310918e+02, RNORM =   1.628506203019e-02
+[2026-01-21 07:58:04.701] [davidson] [info] iter =    5, LAM(0) =  -2.266099919674e+02, RNORM =   5.585689031120e-03
+[2026-01-21 07:58:04.739] [davidson] [info] iter =    6, LAM(0) =  -2.266100310674e+02, RNORM =   2.467836716926e-03
+[2026-01-21 07:58:04.785] [davidson] [info] iter =    7, LAM(0) =  -2.266100386289e+02, RNORM =   1.104587061406e-03
+[2026-01-21 07:58:04.826] [davidson] [info] iter =    8, LAM(0) =  -2.266100398903e+02, RNORM =   3.757162157815e-04
+[2026-01-21 07:58:04.865] [davidson] [info] iter =    9, LAM(0) =  -2.266100400200e+02, RNORM =   1.212877377045e-04
+[2026-01-21 07:58:04.906] [davidson] [info] iter =   10, LAM(0) =  -2.266100400319e+02, RNORM =   3.933627733117e-05
+[2026-01-21 07:58:04.952] [davidson] [info] iter =   11, LAM(0) =  -2.266100400331e+02, RNORM =   1.304929555435e-05
+[2026-01-21 07:58:04.998] [davidson] [info] iter =   12, LAM(0) =  -2.266100400332e+02, RNORM =   4.867806703852e-06
+[2026-01-21 07:58:05.050] [davidson] [info] iter =   13, LAM(0) =  -2.266100400333e+02, RNORM =   2.015384562192e-06
+[2026-01-21 07:58:05.096] [davidson] [info] iter =   14, LAM(0) =  -2.266100400333e+02, RNORM =   7.997987105583e-07
+[2026-01-21 07:58:05.096] [davidson] [info] Davidson Converged!
+[2026-01-21 07:58:05.097] [ci_solver] [info]   DAV_NITER =   14, E0 = -2.266100e+02 Eh, DAVIDSON_DUR = 4.91595e+02 ms
+[2026-01-21 07:58:05.099] [asci_grow] [info] iter =    4, E0 =  -2.266100400333e+02, dE =  -3.776564e-02, WFN_SIZE = 51200
+[2026-01-21 07:58:05.104] [asci_search] [info] [ASCI Search Settings]:
+[2026-01-21 07:58:05.104] [asci_search] [info]   NCDETS =    100, NDETS_MAX =    100000, H_EL_TOL = 1.000000e-08, RV_TOL = 1.000000e-08
+[2026-01-21 07:58:05.104] [asci_search] [info]   MAX_RV_SIZE = 500000000, JUST_SINGLES = false
+[2026-01-21 07:58:05.104] [asci_search] [info]   CDET_SUM = 9.41e-01
+[2026-01-21 07:58:05.106] [asci_search] [info]   * Will Generate up to Quintuplets
+[2026-01-21 07:58:05.128] [asci_search] [info]   * GEN_DUR = 2.18e+01 ms
+[2026-01-21 07:58:14.269] [asci_search] [info]   * ASCI Kept 27102445 Pairs
+[2026-01-21 07:58:14.269] [asci_search] [info]   * Pairs Mem = 8.08e-01 GiB
+[2026-01-21 07:58:15.932] [asci_search] [info]   * ASCI will search over 27102445 unique determinants
+[2026-01-21 07:58:15.932] [asci_search] [info]   * PAIR_DUR = 9.16e+00 s, SORT_ACC_DUR = 1.66e+00 s
+[2026-01-21 07:58:15.987] [asci_search] [info]   * KEEP_LARG_DUR = 5.48e-02 s
+[2026-01-21 07:58:16.558] [asci_search] [info]   * Kth Score Pivot = 3.5509814699078053e-04
+[2026-01-21 07:58:16.672] [asci_search] [info]   * ASCI_SORT_DUR = 6.85e-01 s
+[2026-01-21 07:58:16.673] [asci_search] [info]   * New Dets Mem = 1.49e-03 GiB
+[2026-01-21 07:58:16.673] [asci_search] [info]   * ASCI_SEARCH DUR = 1.16e+01 s
+[2026-01-21 07:58:16.682] [ci_solver] [info] [Selected CI Solver]:
+[2026-01-21 07:58:16.682] [ci_solver] [info]   NDETS = 100000, MATEL_TOL = 2.22045e-16, RES_TOL = 1.00000e-06, MAX_SUB =  200
+[2026-01-21 07:58:24.699] [ci_solver] [info]   NNZ   = 82781408, H_DUR     = 8.01777e+03 ms
+[2026-01-21 07:58:24.700] [ci_solver] [info]   HMEM_LOC = 1.23e+00 GiB
+[2026-01-21 07:58:24.700] [ci_solver] [info]   H_SPARSE = 8.28e-01%
+[2026-01-21 07:58:24.754] [ci_solver] [info]   * Will generate identity guess
+[2026-01-21 07:58:24.804] [davidson] [info] [Davidson Eigensolver]:
+[2026-01-21 07:58:24.804] [davidson] [info]   N = 100000, MAX_M =  200, RES_TOL = 1.00000e-06
+[2026-01-21 07:58:24.903] [davidson] [info] iter =    1, LAM(0) =  -2.265382457393e+02, RNORM =   1.740828811384e-01
+[2026-01-21 07:58:24.951] [davidson] [info] iter =    2, LAM(0) =  -2.265943714433e+02, RNORM =   1.753518054893e-01
+[2026-01-21 07:58:25.005] [davidson] [info] iter =    3, LAM(0) =  -2.266202776936e+02, RNORM =   6.365853927419e-02
+[2026-01-21 07:58:25.066] [davidson] [info] iter =    4, LAM(0) =  -2.266241048772e+02, RNORM =   1.705585733515e-02
+[2026-01-21 07:58:25.118] [davidson] [info] iter =    5, LAM(0) =  -2.266243678021e+02, RNORM =   5.897663858069e-03
+[2026-01-21 07:58:25.186] [davidson] [info] iter =    6, LAM(0) =  -2.266244038245e+02, RNORM =   2.200479827331e-03
+[2026-01-21 07:58:25.242] [davidson] [info] iter =    7, LAM(0) =  -2.266244088843e+02, RNORM =   7.979309338658e-04
+[2026-01-21 07:58:25.298] [davidson] [info] iter =    8, LAM(0) =  -2.266244095038e+02, RNORM =   2.684500449848e-04
+[2026-01-21 07:58:25.359] [davidson] [info] iter =    9, LAM(0) =  -2.266244095674e+02, RNORM =   1.021958962152e-04
+[2026-01-21 07:58:25.421] [davidson] [info] iter =   10, LAM(0) =  -2.266244095765e+02, RNORM =   4.086915105467e-05
+[2026-01-21 07:58:25.479] [davidson] [info] iter =   11, LAM(0) =  -2.266244095780e+02, RNORM =   1.601547378449e-05
+[2026-01-21 07:58:25.544] [davidson] [info] iter =   12, LAM(0) =  -2.266244095783e+02, RNORM =   6.736354657237e-06
+[2026-01-21 07:58:25.613] [davidson] [info] iter =   13, LAM(0) =  -2.266244095783e+02, RNORM =   2.597088518150e-06
+[2026-01-21 07:58:25.684] [davidson] [info] iter =   14, LAM(0) =  -2.266244095783e+02, RNORM =   9.682330556577e-07
+[2026-01-21 07:58:25.684] [davidson] [info] Davidson Converged!
+[2026-01-21 07:58:25.685] [ci_solver] [info]   DAV_NITER =   14, E0 = -2.266244e+02 Eh, DAVIDSON_DUR = 8.81001e+02 ms
+[2026-01-21 07:58:25.689] [asci_grow] [info] iter =    5, E0 =  -2.266244095783e+02, dE =  -1.436955e-02, WFN_SIZE = 100000
+[2026-01-21 07:58:25.689] [asci_grow] [info] * GROW_DUR = 6.06e+04 ms
+[2026-01-21 07:58:25.689] [asci_refine] [info] [ASCI Refine Settings]:
+[2026-01-21 07:58:25.690] [asci_refine] [info]   NTDETS = 100000, NCDETS =    100, MAX_REFINE_ITER =    6, REFINE_TOL = 1.00e-06
+[2026-01-21 07:58:25.690] [asci_refine] [info] iter =    0, E0 =  -2.266244095783e+02, dE =   0.000000e+00
+[2026-01-21 07:58:25.700] [asci_search] [info] [ASCI Search Settings]:
+[2026-01-21 07:58:25.700] [asci_search] [info]   NCDETS =    100, NDETS_MAX =    100000, H_EL_TOL = 1.000000e-08, RV_TOL = 1.000000e-08
+[2026-01-21 07:58:25.700] [asci_search] [info]   MAX_RV_SIZE = 500000000, JUST_SINGLES = false
+[2026-01-21 07:58:25.700] [asci_search] [info]   CDET_SUM = 9.34e-01
+[2026-01-21 07:58:25.701] [asci_search] [info]   * Will Generate up to Quintuplets
+[2026-01-21 07:58:25.726] [asci_search] [info]   * GEN_DUR = 2.48e+01 ms
+[2026-01-21 07:58:34.814] [asci_search] [info]   * ASCI Kept 27104951 Pairs
+[2026-01-21 07:58:34.814] [asci_search] [info]   * Pairs Mem = 8.08e-01 GiB
+[2026-01-21 07:58:36.758] [asci_search] [info]   * ASCI will search over 27104951 unique determinants
+[2026-01-21 07:58:36.758] [asci_search] [info]   * PAIR_DUR = 9.11e+00 s, SORT_ACC_DUR = 1.94e+00 s
+[2026-01-21 07:58:36.856] [asci_search] [info]   * KEEP_LARG_DUR = 9.83e-02 s
+[2026-01-21 07:58:37.366] [asci_search] [info]   * Kth Score Pivot = 3.5152829516175131e-04
+[2026-01-21 07:58:37.508] [asci_search] [info]   * ASCI_SORT_DUR = 6.52e-01 s
+[2026-01-21 07:58:37.511] [asci_search] [info]   * New Dets Mem = 1.49e-03 GiB
+[2026-01-21 07:58:37.512] [asci_search] [info]   * ASCI_SEARCH DUR = 1.18e+01 s
+[2026-01-21 07:58:37.520] [ci_solver] [info] [Selected CI Solver]:
+[2026-01-21 07:58:37.520] [ci_solver] [info]   NDETS = 100000, MATEL_TOL = 2.22045e-16, RES_TOL = 1.00000e-06, MAX_SUB =  200
+[2026-01-21 07:58:45.408] [ci_solver] [info]   NNZ   = 82679646, H_DUR     = 7.88773e+03 ms
+[2026-01-21 07:58:45.408] [ci_solver] [info]   HMEM_LOC = 1.23e+00 GiB
+[2026-01-21 07:58:45.408] [ci_solver] [info]   H_SPARSE = 8.27e-01%
+[2026-01-21 07:58:45.467] [ci_solver] [info]   * Will generate identity guess
+[2026-01-21 07:58:45.522] [davidson] [info] [Davidson Eigensolver]:
+[2026-01-21 07:58:45.522] [davidson] [info]   N = 100000, MAX_M =  200, RES_TOL = 1.00000e-06
+[2026-01-21 07:58:45.626] [davidson] [info] iter =    1, LAM(0) =  -2.265383046485e+02, RNORM =   1.740881112420e-01
+[2026-01-21 07:58:45.675] [davidson] [info] iter =    2, LAM(0) =  -2.265944205465e+02, RNORM =   1.752315249314e-01
+[2026-01-21 07:58:45.729] [davidson] [info] iter =    3, LAM(0) =  -2.266202180961e+02, RNORM =   6.365462132883e-02
+[2026-01-21 07:58:45.779] [davidson] [info] iter =    4, LAM(0) =  -2.266240434708e+02, RNORM =   1.783312139865e-02
+[2026-01-21 07:58:45.831] [davidson] [info] iter =    5, LAM(0) =  -2.266243431401e+02, RNORM =   6.269165508755e-03
+[2026-01-21 07:58:45.891] [davidson] [info] iter =    6, LAM(0) =  -2.266243885461e+02, RNORM =   2.653418518674e-03
+[2026-01-21 07:58:45.950] [davidson] [info] iter =    7, LAM(0) =  -2.266243969868e+02, RNORM =   1.212791032293e-03
+[2026-01-21 07:58:46.017] [davidson] [info] iter =    8, LAM(0) =  -2.266243984722e+02, RNORM =   4.234255611918e-04
+[2026-01-21 07:58:46.071] [davidson] [info] iter =    9, LAM(0) =  -2.266243986368e+02, RNORM =   1.430578787183e-04
+[2026-01-21 07:58:46.129] [davidson] [info] iter =   10, LAM(0) =  -2.266243986532e+02, RNORM =   4.887673873694e-05
+[2026-01-21 07:58:46.185] [davidson] [info] iter =   11, LAM(0) =  -2.266243986550e+02, RNORM =   1.547685991728e-05
+[2026-01-21 07:58:46.242] [davidson] [info] iter =   12, LAM(0) =  -2.266243986552e+02, RNORM =   5.143935949040e-06
+[2026-01-21 07:58:46.310] [davidson] [info] iter =   13, LAM(0) =  -2.266243986552e+02, RNORM =   2.010987395255e-06
+[2026-01-21 07:58:46.366] [davidson] [info] iter =   14, LAM(0) =  -2.266243986552e+02, RNORM =   9.100698099491e-07
+[2026-01-21 07:58:46.366] [davidson] [info] Davidson Converged!
+[2026-01-21 07:58:46.368] [ci_solver] [info]   DAV_NITER =   14, E0 = -2.266244e+02 Eh, DAVIDSON_DUR = 8.45757e+02 ms
+[2026-01-21 07:58:46.377] [asci_refine] [info] iter =    1, E0 =  -2.266243986552e+02, dE =   1.092314e-05
+[2026-01-21 07:58:46.388] [asci_search] [info] [ASCI Search Settings]:
+[2026-01-21 07:58:46.388] [asci_search] [info]   NCDETS =    100, NDETS_MAX =    100000, H_EL_TOL = 1.000000e-08, RV_TOL = 1.000000e-08
+[2026-01-21 07:58:46.388] [asci_search] [info]   MAX_RV_SIZE = 500000000, JUST_SINGLES = false
+[2026-01-21 07:58:46.388] [asci_search] [info]   CDET_SUM = 9.34e-01
+[2026-01-21 07:58:46.389] [asci_search] [info]   * Will Generate up to Quintuplets
+[2026-01-21 07:58:46.414] [asci_search] [info]   * GEN_DUR = 2.51e+01 ms
+[2026-01-21 07:58:55.536] [asci_search] [info]   * ASCI Kept 27104924 Pairs
+[2026-01-21 07:58:55.536] [asci_search] [info]   * Pairs Mem = 8.08e-01 GiB
+[2026-01-21 07:58:57.613] [asci_search] [info]   * ASCI will search over 27104924 unique determinants
+[2026-01-21 07:58:57.613] [asci_search] [info]   * PAIR_DUR = 9.15e+00 s, SORT_ACC_DUR = 2.08e+00 s
+[2026-01-21 07:58:57.695] [asci_search] [info]   * KEEP_LARG_DUR = 8.16e-02 s
+[2026-01-21 07:58:58.167] [asci_search] [info]   * Kth Score Pivot = 3.5157254752223244e-04
+[2026-01-21 07:58:58.345] [asci_search] [info]   * ASCI_SORT_DUR = 6.51e-01 s
+[2026-01-21 07:58:58.347] [asci_search] [info]   * New Dets Mem = 1.49e-03 GiB
+[2026-01-21 07:58:58.347] [asci_search] [info]   * ASCI_SEARCH DUR = 1.20e+01 s
+[2026-01-21 07:58:58.355] [ci_solver] [info] [Selected CI Solver]:
+[2026-01-21 07:58:58.355] [ci_solver] [info]   NDETS = 100000, MATEL_TOL = 2.22045e-16, RES_TOL = 1.00000e-06, MAX_SUB =  200
+[2026-01-21 07:59:06.345] [ci_solver] [info]   NNZ   = 82698978, H_DUR     = 7.98920e+03 ms
+[2026-01-21 07:59:06.345] [ci_solver] [info]   HMEM_LOC = 1.23e+00 GiB
+[2026-01-21 07:59:06.345] [ci_solver] [info]   H_SPARSE = 8.27e-01%
+[2026-01-21 07:59:06.400] [ci_solver] [info]   * Will generate identity guess
+[2026-01-21 07:59:06.451] [davidson] [info] [Davidson Eigensolver]:
+[2026-01-21 07:59:06.451] [davidson] [info]   N = 100000, MAX_M =  200, RES_TOL = 1.00000e-06
+[2026-01-21 07:59:06.542] [davidson] [info] iter =    1, LAM(0) =  -2.265383132855e+02, RNORM =   1.740842248398e-01
+[2026-01-21 07:59:06.582] [davidson] [info] iter =    2, LAM(0) =  -2.265944253981e+02, RNORM =   1.752151022816e-01
+[2026-01-21 07:59:06.642] [davidson] [info] iter =    3, LAM(0) =  -2.266202177198e+02, RNORM =   6.364392163925e-02
+[2026-01-21 07:59:06.698] [davidson] [info] iter =    4, LAM(0) =  -2.266240420302e+02, RNORM =   1.783217764191e-02
+[2026-01-21 07:59:06.765] [davidson] [info] iter =    5, LAM(0) =  -2.266243415962e+02, RNORM =   6.267503481307e-03
+[2026-01-21 07:59:06.833] [davidson] [info] iter =    6, LAM(0) =  -2.266243869584e+02, RNORM =   2.651200064758e-03
+[2026-01-21 07:59:06.906] [davidson] [info] iter =    7, LAM(0) =  -2.266243953865e+02, RNORM =   1.211893969743e-03
+[2026-01-21 07:59:06.964] [davidson] [info] iter =    8, LAM(0) =  -2.266243968702e+02, RNORM =   4.231912969829e-04
+[2026-01-21 07:59:07.036] [davidson] [info] iter =    9, LAM(0) =  -2.266243970347e+02, RNORM =   1.429542562136e-04
+[2026-01-21 07:59:07.097] [davidson] [info] iter =   10, LAM(0) =  -2.266243970511e+02, RNORM =   4.884023367269e-05
+[2026-01-21 07:59:07.159] [davidson] [info] iter =   11, LAM(0) =  -2.266243970528e+02, RNORM =   1.548167299395e-05
+[2026-01-21 07:59:07.222] [davidson] [info] iter =   12, LAM(0) =  -2.266243970530e+02, RNORM =   5.160836895242e-06
+[2026-01-21 07:59:07.283] [davidson] [info] iter =   13, LAM(0) =  -2.266243970530e+02, RNORM =   2.039499180322e-06
+[2026-01-21 07:59:07.340] [davidson] [info] iter =   14, LAM(0) =  -2.266243970530e+02, RNORM =   9.491498108823e-07
+[2026-01-21 07:59:07.340] [davidson] [info] Davidson Converged!
+[2026-01-21 07:59:07.341] [ci_solver] [info]   DAV_NITER =   14, E0 = -2.266244e+02 Eh, DAVIDSON_DUR = 8.90397e+02 ms
+[2026-01-21 07:59:07.360] [asci_refine] [info] iter =    2, E0 =  -2.266243970530e+02, dE =   1.602143e-06
+[2026-01-21 07:59:07.371] [asci_search] [info] [ASCI Search Settings]:
+[2026-01-21 07:59:07.371] [asci_search] [info]   NCDETS =    100, NDETS_MAX =    100000, H_EL_TOL = 1.000000e-08, RV_TOL = 1.000000e-08
+[2026-01-21 07:59:07.371] [asci_search] [info]   MAX_RV_SIZE = 500000000, JUST_SINGLES = false
+[2026-01-21 07:59:07.371] [asci_search] [info]   CDET_SUM = 9.34e-01
+[2026-01-21 07:59:07.373] [asci_search] [info]   * Will Generate up to Quintuplets
+[2026-01-21 07:59:07.397] [asci_search] [info]   * GEN_DUR = 2.46e+01 ms
+[2026-01-21 07:59:16.947] [asci_search] [info]   * ASCI Kept 27104936 Pairs
+[2026-01-21 07:59:16.947] [asci_search] [info]   * Pairs Mem = 8.08e-01 GiB
+[2026-01-21 07:59:18.714] [asci_search] [info]   * ASCI will search over 27104936 unique determinants
+[2026-01-21 07:59:18.714] [asci_search] [info]   * PAIR_DUR = 9.58e+00 s, SORT_ACC_DUR = 1.77e+00 s
+[2026-01-21 07:59:18.772] [asci_search] [info]   * KEEP_LARG_DUR = 5.77e-02 s
+[2026-01-21 07:59:19.326] [asci_search] [info]   * Kth Score Pivot = 3.5158155978122876e-04
+[2026-01-21 07:59:19.449] [asci_search] [info]   * ASCI_SORT_DUR = 6.77e-01 s
+[2026-01-21 07:59:19.450] [asci_search] [info]   * New Dets Mem = 1.49e-03 GiB
+[2026-01-21 07:59:19.450] [asci_search] [info]   * ASCI_SEARCH DUR = 1.21e+01 s
+[2026-01-21 07:59:19.459] [ci_solver] [info] [Selected CI Solver]:
+[2026-01-21 07:59:19.459] [ci_solver] [info]   NDETS = 100000, MATEL_TOL = 2.22045e-16, RES_TOL = 1.00000e-06, MAX_SUB =  200
+[2026-01-21 07:59:27.403] [ci_solver] [info]   NNZ   = 82702516, H_DUR     = 7.94408e+03 ms
+[2026-01-21 07:59:27.403] [ci_solver] [info]   HMEM_LOC = 1.23e+00 GiB
+[2026-01-21 07:59:27.403] [ci_solver] [info]   H_SPARSE = 8.27e-01%
+[2026-01-21 07:59:27.456] [ci_solver] [info]   * Will generate identity guess
+[2026-01-21 07:59:27.505] [davidson] [info] [Davidson Eigensolver]:
+[2026-01-21 07:59:27.505] [davidson] [info]   N = 100000, MAX_M =  200, RES_TOL = 1.00000e-06
+[2026-01-21 07:59:27.612] [davidson] [info] iter =    1, LAM(0) =  -2.265383161798e+02, RNORM =   1.740834413643e-01
+[2026-01-21 07:59:27.670] [davidson] [info] iter =    2, LAM(0) =  -2.265944269238e+02, RNORM =   1.752075402918e-01
+[2026-01-21 07:59:27.724] [davidson] [info] iter =    3, LAM(0) =  -2.266202173561e+02, RNORM =   6.364182597596e-02
+[2026-01-21 07:59:27.785] [davidson] [info] iter =    4, LAM(0) =  -2.266240413978e+02, RNORM =   1.783239152568e-02
+[2026-01-21 07:59:27.837] [davidson] [info] iter =    5, LAM(0) =  -2.266243409714e+02, RNORM =   6.267618223282e-03
+[2026-01-21 07:59:27.895] [davidson] [info] iter =    6, LAM(0) =  -2.266243863350e+02, RNORM =   2.651268086187e-03
+[2026-01-21 07:59:27.949] [davidson] [info] iter =    7, LAM(0) =  -2.266243947636e+02, RNORM =   1.211914380075e-03
+[2026-01-21 07:59:28.005] [davidson] [info] iter =    8, LAM(0) =  -2.266243962473e+02, RNORM =   4.231936961698e-04
+[2026-01-21 07:59:28.062] [davidson] [info] iter =    9, LAM(0) =  -2.266243964118e+02, RNORM =   1.429528799991e-04
+[2026-01-21 07:59:28.124] [davidson] [info] iter =   10, LAM(0) =  -2.266243964282e+02, RNORM =   4.883708121993e-05
+[2026-01-21 07:59:28.177] [davidson] [info] iter =   11, LAM(0) =  -2.266243964300e+02, RNORM =   1.548134298668e-05
+[2026-01-21 07:59:28.250] [davidson] [info] iter =   12, LAM(0) =  -2.266243964301e+02, RNORM =   5.160389157853e-06
+[2026-01-21 07:59:28.313] [davidson] [info] iter =   13, LAM(0) =  -2.266243964302e+02, RNORM =   2.038708430602e-06
+[2026-01-21 07:59:28.377] [davidson] [info] iter =   14, LAM(0) =  -2.266243964302e+02, RNORM =   9.478363684370e-07
+[2026-01-21 07:59:28.377] [davidson] [info] Davidson Converged!
+[2026-01-21 07:59:28.378] [ci_solver] [info]   DAV_NITER =   14, E0 = -2.266244e+02 Eh, DAVIDSON_DUR = 8.72883e+02 ms
+[2026-01-21 07:59:28.381] [asci_refine] [info] iter =    3, E0 =  -2.266243964302e+02, dE =   6.228686e-07
+[2026-01-21 07:59:28.381] [asci_refine] [info] ASCI Refine Converged!
+[2026-01-21 07:59:55.973957] [info] [sample_sci_workflow] CASCI energy = -309.95052644 Hartree
+[2026-01-21 07:59:55.974284] [info] [qdk:chemistry:algorithms:microsoft:active_space:autocas_active_space] AutoCAS::Starting active space selection.
+[2026-01-21 07:59:55.987014] [info] [qdk:chemistry:algorithms:active_space] Max entropy: 0.905359
+[2026-01-21 07:59:55.987080] [info] [qdk:chemistry:algorithms:active_space] Normalized orbital entropies:
+[2026-01-21 07:59:55.987087] [info] [qdk:chemistry:algorithms:active_space]   Orbital index   Normalized Entropy   Raw Entropy
+[2026-01-21 07:59:55.987099] [info] [qdk:chemistry:algorithms:active_space]              30             1.000000      0.905359
+[2026-01-21 07:59:55.987104] [info] [qdk:chemistry:algorithms:active_space]              29             0.988482      0.894930
+[2026-01-21 07:59:55.987110] [info] [qdk:chemistry:algorithms:active_space]              28             0.237058      0.214622
+[2026-01-21 07:59:55.987116] [info] [qdk:chemistry:algorithms:active_space]              27             0.229358      0.207651
+[2026-01-21 07:59:55.987121] [info] [qdk:chemistry:algorithms:active_space]              34             0.188918      0.171038
+[2026-01-21 07:59:55.987126] [info] [qdk:chemistry:algorithms:active_space]              37             0.118129      0.106949
+[2026-01-21 07:59:55.987131] [info] [qdk:chemistry:algorithms:active_space]              35             0.098345      0.089038
+[2026-01-21 07:59:55.987136] [info] [qdk:chemistry:algorithms:active_space]              36             0.095319      0.086298
+[2026-01-21 07:59:55.987141] [info] [qdk:chemistry:algorithms:active_space]              22             0.059139      0.053542
+[2026-01-21 07:59:55.987146] [info] [qdk:chemistry:algorithms:active_space]              38             0.052055      0.047128
+[2026-01-21 07:59:55.987151] [info] [qdk:chemistry:algorithms:active_space]              33             0.048840      0.044218
+[2026-01-21 07:59:55.987156] [info] [qdk:chemistry:algorithms:active_space]              31             0.044504      0.040292
+[2026-01-21 07:59:55.987161] [info] [qdk:chemistry:algorithms:active_space]              47             0.044205      0.040022
+[2026-01-21 07:59:55.987166] [info] [qdk:chemistry:algorithms:active_space]              21             0.042518      0.038494
+[2026-01-21 07:59:55.987171] [info] [qdk:chemistry:algorithms:active_space]              46             0.040450      0.036622
+[2026-01-21 07:59:55.987176] [info] [qdk:chemistry:algorithms:active_space]              45             0.039539      0.035797
+[2026-01-21 07:59:55.987181] [info] [qdk:chemistry:algorithms:active_space]              20             0.037410      0.033869
+[2026-01-21 07:59:55.987186] [info] [qdk:chemistry:algorithms:active_space]              17             0.037071      0.033563
+[2026-01-21 07:59:55.987191] [info] [qdk:chemistry:algorithms:active_space]              26             0.036960      0.033462
+[2026-01-21 07:59:55.987196] [info] [qdk:chemistry:algorithms:active_space]              19             0.036498      0.033044
+[2026-01-21 07:59:55.987201] [info] [qdk:chemistry:algorithms:active_space]              23             0.035707      0.032328
+[2026-01-21 07:59:55.987206] [info] [qdk:chemistry:algorithms:active_space]              32             0.035572      0.032205
+[2026-01-21 07:59:55.987211] [info] [qdk:chemistry:algorithms:active_space]              15             0.035566      0.032200
+[2026-01-21 07:59:55.987216] [info] [qdk:chemistry:algorithms:active_space]              18             0.034264      0.031021
+[2026-01-21 07:59:55.987221] [info] [qdk:chemistry:algorithms:active_space]              24             0.034151      0.030919
+[2026-01-21 07:59:55.987226] [info] [qdk:chemistry:algorithms:active_space]              25             0.033544      0.030369
+[2026-01-21 07:59:55.987231] [info] [qdk:chemistry:algorithms:active_space]              14             0.033042      0.029915
+[2026-01-21 07:59:55.987236] [info] [qdk:chemistry:algorithms:active_space]              50             0.032870      0.029760
+[2026-01-21 07:59:55.987254] [info] [qdk:chemistry:algorithms:active_space]              48             0.032607      0.029521
+[2026-01-21 07:59:55.987259] [info] [qdk:chemistry:algorithms:active_space]              16             0.031637      0.028643
+[2026-01-21 07:59:55.987264] [info] [qdk:chemistry:algorithms:active_space]              42             0.030919      0.027993
+[2026-01-21 07:59:55.987270] [info] [qdk:chemistry:algorithms:active_space]              49             0.030538      0.027648
+[2026-01-21 07:59:55.987276] [info] [qdk:chemistry:algorithms:active_space]              51             0.026525      0.024014
+[2026-01-21 07:59:55.988550] [info] [qdk:chemistry:algorithms:active_space]              44             0.026438      0.023936
+[2026-01-21 07:59:55.988557] [info] [qdk:chemistry:algorithms:active_space]              39             0.026145      0.023670
+[2026-01-21 07:59:55.988563] [info] [qdk:chemistry:algorithms:active_space]              13             0.025133      0.022755
+[2026-01-21 07:59:55.988568] [info] [qdk:chemistry:algorithms:active_space]              43             0.024545      0.022222
+[2026-01-21 07:59:55.988573] [info] [qdk:chemistry:algorithms:active_space]              41             0.024195      0.021906
+[2026-01-21 07:59:55.988578] [info] [qdk:chemistry:algorithms:active_space]              40             0.023672      0.021431
+[2026-01-21 07:59:55.988583] [info] [qdk:chemistry:algorithms:active_space]              12             0.022977      0.020802
+[2026-01-21 07:59:55.988588] [info] [qdk:chemistry:algorithms:active_space]              11             0.019565      0.017713
+[2026-01-21 07:59:55.988593] [info] [qdk:chemistry:algorithms:active_space]              10             0.012675      0.011475
+[2026-01-21 07:59:55.988610] [info] [qdk:chemistry:algorithms:active_space]               9             0.011685      0.010579
+[2026-01-21 07:59:55.988615] [info] [qdk:chemistry:algorithms:active_space]               8             0.010779      0.009758
+[2026-01-21 07:59:55.988830] [info] [qdk:chemistry:algorithms:microsoft:active_space:autocas_active_space] Identified 1 plateaus.
+[2026-01-21 07:59:55.989906] [info] [qdk:chemistry:algorithms:microsoft:active_space:autocas_active_space] AutoCAS::Selected active space of 2 orbitals: 29, 30
+[2026-01-21 07:59:55.991121] [info] [sample_sci_workflow] AutoCAS selected active space with indices: [29, 30]
+[2026-01-21 07:59:59.283192] [info] [qdk:chemistry:algorithms:microsoft:macis_asci] Requested number of determinants (100000) exceeds FCI dimension (4).
+[2026-01-21 07:59:59.283] [ci_solver] [info] [Selected CI Solver]:
+[2026-01-21 07:59:59.283] [ci_solver] [info]   NDETS =      4, MATEL_TOL = 2.22045e-16, RES_TOL = 1.00000e-06, MAX_SUB =  200
+[2026-01-21 07:59:59.430] [ci_solver] [info]   NNZ   =     16, H_DUR     = 1.46752e+02 ms
+[2026-01-21 07:59:59.430] [ci_solver] [info]   HMEM_LOC = 2.76e-07 GiB
+[2026-01-21 07:59:59.430] [ci_solver] [info]   H_SPARSE = 1.00e+02%
+[2026-01-21 07:59:59.430] [ci_solver] [info]   * Will generate identity guess
+[2026-01-21 07:59:59.430] [davidson] [info] [Davidson Eigensolver]:
+[2026-01-21 07:59:59.430] [davidson] [info]   N =      4, MAX_M =    4, RES_TOL = 1.00000e-06
+[2026-01-21 07:59:59.475] [davidson] [info] iter =    1, LAM(0) =  -6.524236546049e-01, RNORM =   1.161521670732e-02
+[2026-01-21 07:59:59.498] [davidson] [info] iter =    2, LAM(0) =  -6.530429280291e-01, RNORM =   1.758157433435e-16
+[2026-01-21 07:59:59.498] [davidson] [info] Davidson Converged!
+[2026-01-21 07:59:59.498] [ci_solver] [info]   DAV_NITER =    2, E0 = -6.530429e-01 Eh, DAVIDSON_DUR = 6.87002e+01 ms
+[2026-01-21 07:59:59.543921] [info] [sample_sci_workflow] Hamiltonian Summary:
+  Type: Hermitian
+  Restrictedness: Restricted
+  Active Orbitals: 2
+  Total Orbitals: 172
+  Core Energy: -309.165418
+  Integral Statistics:
+    One-body Integrals (alpha): 4 (larger than 0.000001: 4)
+    Two-body Integrals (aaaa): 16 (larger than 0.000001: 16)
+
+[2026-01-21 07:59:59.544233] [info] [sample_sci_workflow] AutoCAS energy = -309.81846062 Hartree
+[2026-01-21 07:59:59.709532] [info] [qdk_chemistry.utils.wavefunction] Sparse CI finder (2 dets) = -309.81784127 Hartree (ΔE = 0.6194 mHartree)
+[2026-01-21 07:59:59.710274] [info] [sample_sci_workflow] Sparse CI energy = -309.81784127 Hartree
+[2026-01-21 07:59:59.712296] [info] [sample_sci_workflow] Stored wavefunction with 2 determinants
+Determinants:
+  20: -0.76598193
+  02: 0.64286210
+
+
+=== WORKFLOW END ===
+End: 2026-01-21T08:00:00.425941
+Elapsed seconds: 276.267564
