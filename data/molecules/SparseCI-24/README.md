@@ -5,6 +5,10 @@
 
 A curated benchmark set of 24 molecules with compact sparse CI wavefunctions suitable for quantum computing applications.
 
+![Sparse CI Analysis](sparse_ci_analysis.png)
+
+*Each point is one molecule. The x-axis shows the number of determinants in the sparse CI expansion, the y-axis shows multi-reference character (100 − |c₀|² × 100 %), and the color indicates the energy error ΔE relative to the full CASCI reference. Labels appear for systems with multi-reference character above 10%.*
+
 ## Selection Criteria
 
 All molecules in this dataset satisfy:
@@ -76,7 +80,12 @@ SparseCI-24/
 ├── SparseCI-24.json          # Complete dataset: structures, orbitals,
 │                             # Hamiltonians, and sparse CI wavefunctions
 │                             # for all 24 molecules
-├── regenerate.py             # Script to regenerate the dataset from xyz/
+├── regenerate.py             # Regenerate SparseCI-24.json from raw_output/ logs
+│                             # (--collate-only) or re-run the full workflow
+│                             # (requires qdk-chemistry)
+├── plot_analysis.py          # Generate sparse_ci_analysis.png from the JSON
+│                             # (requires matplotlib, numpy, pandas)
+├── sparse_ci_analysis.png    # Overview scatter plot (see above)
 │
 ├── xyz/                      # Molecular geometries in XYZ format
 │   ├── 13Cyclohexadiene.xyz
@@ -99,15 +108,18 @@ SparseCI-24/
 
 ## Data Format
 
-The `SparseCI-24.json` file contains an array of molecule records, each with:
-- Molecule name
-- XYZ coordinates (as string)
-- SCF energy (Hartree)
-- Molecular structure summary (composition, mass, nuclear repulsion energy)
-- Orbital information and active space details
-- Hamiltonian summaries (active orbitals, core energy)
-- Sparse CI wavefunction (determinants and coefficients)
-- Energy benchmarks
+The `SparseCI-24.json` file contains an array of 24 molecule records, each with:
+- `name` — Molecule identifier
+- `xyz` — XYZ coordinates (as string)
+- `structure` — Composition, mass (amu), nuclear repulsion energy (Eh)
+- `scf_energy_hartree` — RHF/cc-pVDZ energy
+- `orbitals_summary` — AO/MO counts, active/inactive/virtual orbital counts
+- `hamiltonian_summaries` — Core energy and active orbital count for each Hamiltonian (initial and AutoCAS)
+- `casci_energies_hartree` — CASCI energy in the initial active space
+- `initial_casci_energy_hartree` — Same as above (scalar)
+- `autocas_energy_hartree` — CASCI energy in the AutoCAS-refined active space
+- `autocas_selected_indices` — Orbital indices selected by AutoCAS
+- `sparse_ci_finder` — Sparse CI results: determinant count, energy, ΔE (mHa), and the determinants with their CI coefficients
 
 ## Methodology
 
