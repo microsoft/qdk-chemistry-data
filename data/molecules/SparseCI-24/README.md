@@ -111,7 +111,7 @@ The `SparseCI-24.json` file contains an array of molecule records, each with:
 
 ## Methodology
 
-Each molecule was processed using the `sample_sci_workflow.py` script, which performs the following steps:
+Molecular geometries were optimized using [ORCA](https://www.faccts.de/orca/). Each optimized geometry was then processed using the `sample_sci_workflow.py` script, which performs the following steps:
 
 1. **SCF Calculation**: Restricted Hartree-Fock using the cc-pVDZ basis set via QDK/Chemistry.
 
@@ -149,6 +149,7 @@ Full computation logs are available in the `raw_output/` directory.
 If you use this dataset, please cite:
 - [QDK/Chemistry](https://github.com/microsoft/qdk-chemistry) ([arXiv:2601.15253](https://arxiv.org/abs/2601.15253))
 - Original molecule source: [QMe14S database](https://doi.org/10.1021/acs.jpclett.5c00839)
+- Geometry optimization: F. Neese, *Software Update: The ORCA Program System — Version 6.0*, WIREs Comput. Mol. Sci., e70019 (2025). [DOI:10.1002/wcms.70019](https://doi.org/10.1002/wcms.70019)
 
 ## License
 
