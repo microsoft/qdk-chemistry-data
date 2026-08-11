@@ -1,7 +1,8 @@
 # SparseCI-24 Dataset
+>
 > **Source Database:**
+>
 > - [QMe14S](https://doi.org/10.1021/acs.jpclett.5c00839) - A comprehensive spectral dataset for small organic molecules
-
 
 A curated benchmark set of 24 molecules with compact sparse CI wavefunctions suitable for quantum computing applications.
 
@@ -12,6 +13,7 @@ A curated benchmark set of 24 molecules with compact sparse CI wavefunctions sui
 ## Selection Criteria
 
 All molecules in this dataset satisfy:
+
 - **Neutral singlet ground state** (charge = 0, spin multiplicity = 1)
 - **≤6 determinants** in the sparse CI expansion
 - **Sub-milliHartree accuracy** (ΔE < 1.0 mHa) compared to full CI in the AutoCAS-selected active space
@@ -21,6 +23,7 @@ These criteria identify molecules where a small number of Slater determinants ac
 ## Dataset Composition
 
 This dataset contains 24 molecules that passed the selection criteria above:
+
 - **Small organic molecules** (19): Randomly sampled from the [QMe14S](https://doi.org/10.1021/acs.jpclett.5c00839) database and screened for sparse CI suitability (not an exhaustive search of the full database)
 - **Diradicals** (5): 1,n-diradical systems
 
@@ -73,7 +76,7 @@ This dataset contains 24 molecules that passed the selection criteria above:
 
 ## File Structure
 
-```
+```text
 SparseCI-24/
 │
 ├── README.md                 # This file
@@ -109,6 +112,7 @@ SparseCI-24/
 ## Data Format
 
 The `SparseCI-24.json` file contains an array of 24 molecule records, each with:
+
 - `name` — Molecule identifier
 - `xyz` — XYZ coordinates (as string)
 - `structure` — Composition, mass (amu), nuclear repulsion energy (Eh)
@@ -144,8 +148,10 @@ Molecular geometries were optimized using [ORCA](https://www.faccts.de/orca/). E
 ## Reproducibility
 
 Results were generated using `sample_sci_workflow.py` from [qdk-chemistry](https://github.com/microsoft/qdk-chemistry) at commit [`aab310b`](https://github.com/microsoft/qdk-chemistry/commit/aab310b108342456bf6b1017d01ccb8e31d2d52d).
+This exact compatibility baseline is also encoded in `regenerate.py` and can be displayed with `python regenerate.py --version`.
 
 Typical command:
+
 ```bash
 python sample_sci_workflow.py \
     --xyz <structure>.xyz \
@@ -159,10 +165,11 @@ Full computation logs are available in the `raw_output/` directory.
 ## Citation
 
 If you use this dataset, please cite:
+
 - [QDK/Chemistry](https://github.com/microsoft/qdk-chemistry) ([arXiv:2601.15253](https://arxiv.org/abs/2601.15253))
 - Original molecule source: [QMe14S database](https://doi.org/10.1021/acs.jpclett.5c00839)
 - Geometry optimization: F. Neese, *Software Update: The ORCA Program System — Version 6.0*, WIREs Comput. Mol. Sci., e70019 (2025). [DOI:10.1002/wcms.70019](https://doi.org/10.1002/wcms.70019)
 
 ## License
 
-See repository [LICENSE](../../../LICENSE.txt) for terms of use.
+See repository [LICENSE](../../../LICENSE) for terms of use.

@@ -1,0 +1,25 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^mailto:"
+    }
+  ],
+  "replacementPatterns": [
+    {
+      "pattern": "^#",
+      "replacement": ""
+    }
+  ],
+  "httpHeaders": [
+    {
+      "urls": ["https://doi.org/"],
+      "headers": {
+        "Accept": "text/html"
+      }
+    }
+  ],
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "10s",
+  "aliveStatusCodes": [200, 403, 429]
+}

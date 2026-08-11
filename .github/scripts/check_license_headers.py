@@ -7,7 +7,7 @@ copyright and license information.
 
 # --------------------------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT License. See LICENSE.txt in the project root for license information.
+# Licensed under the MIT License. See LICENSE in the project root for license information.
 # --------------------------------------------------------------------------------------------
 
 import argparse
@@ -23,7 +23,7 @@ PYTHON_LICENSE_PATTERNS = [
         r"(?:[ \t]*\n)*"  # Optional blank lines only (no code allowed)
         r"#\s*-+\s*\n"  # Opening dashes
         r"#\s*Copyright \(c\) Microsoft\s+Corporation\.\s+All\s+rights\s+reserved\.\s*\n"
-        r"#\s*Licensed\s+under\s+the\s+MIT\s+License\.\s+See\s+LICENSE\.txt\s+in\s+the\s+project\s+root\s+for\s+license\s+information\.\s*\n"
+        r"#\s*Licensed\s+under\s+the\s+MIT\s+License\.\s+See\s+LICENSE\s+in\s+the\s+project\s+root\s+for\s+license\s+information\.\s*\n"
         r"#\s*-+",  # Closing dashes
         re.MULTILINE | re.DOTALL,
     ),
@@ -126,7 +126,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         print("  # Copyright (c) Microsoft Corporation. All rights reserved.")
         print(
-            "  # Licensed under the MIT License. See LICENSE.txt in the project root for license information."
+            "  # Licensed under the MIT License. See LICENSE in the project root for license information."
         )
         print(
             "  # --------------------------------------------------------------------------------------------"
