@@ -1,0 +1,79 @@
+# Continuous SDL pipeline for the QDK Chemistry reference data repository.
+#
+# The 1ES pipeline template injects the SDL stage that produces and uploads a
+# CodeQL snapshot for this repository's Python sources. autobaseline
+# enableForGitHub attributes the results of this Azure DevOps run back to the
+# GitHub repository.
+#
+# This repository publishes no artifacts, so the only build work is the dataset
+# integrity check that GitHub Actions CI also runs; SDL analysis is the purpose
+# of the pipeline.
+#
+# This file is inert until the pipeline is registered in Azure DevOps against
+# this GitHub repository.
+
+trigger: none
+pr: none
+
+schedules:
+- cron: 0 7 * * * # Time is in UTC; this runs at 11PM Pacific during standard time and 12AM Pacific during daylight time
+  displayName: Nightly SDL Scan
+  branches:
+    include:
+    - main
+  always: true
+
+resources:
+  repositories:
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+  - repository: self
+    path: qdk-chemistry-data
+
+extends:
+  template: v1/1ES.Unofficial.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    settings:
+      networkIsolationPolicy: Permissive,CFSClean,CFSClean2,CFSClean3
+    sdl:
+      autobaseline:
+        enableForGitHub: true
+      componentgovernance:
+        useAgentBuildDirectory: true
+      codeql:
+        compiled:
+          enabled: false
+          justificationForDisabling: Compiled languages are not used in this repository.
+        sourceLanguages: python
+      armory:
+        enabled: false
+        justificationForDisabling: ARM templates are not used in this repository.
+        break: false
+      eslint:
+        enabled: false
+        justificationForDisabling: JavaScript is not used in this repository.
+        exitOnFatalError: true
+      sourceAnalysisPool:
+        name: Azure-Pipelines-DevTools-EO
+        image: windows-2022
+        os: windows
+    stages:
+    - stage: Validate
+      displayName: Validate Datasets
+      jobs:
+      - job: Validate_Datasets
+        displayName: Validate datasets
+        pool:
+          name: Azure-Pipelines-DevTools-EO
+          image: ubuntu-latest
+          os: linux
+        steps:
+        - task: UsePythonVersion@0
+          displayName: Use Python 3.12
+          inputs:
+            versionSpec: '3.12'
+
+        - script: python .github/scripts/check_data_integrity.py
+          displayName: Validate dataset integrity
