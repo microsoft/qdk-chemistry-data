@@ -1,11 +1,9 @@
 """State preparation methods for sparse quantum wavefunctions.
 
-All four methods accept a ``qdk_chemistry.data.Wavefunction`` directly:
+All four methods accept bitstrings and coefficients:
 
-  - ``gf2x`` — GF2+X elimination-based sparse isometry via qdk_chemistry
-    (``sparse_isometry_gf2x``).
-  - ``gf2x_binary_encoding`` — GF2+X with batched Toffoli-based binary
-    encoding via qdk_chemistry (``sparse_isometry_binary_encoding``).
+  - ``gf2x`` — GF2+X elimination-based sparse isometry via qdk_chemistry.
+  - ``gf2x_binary_encoding`` — GF2+X with binary encoding via qdk_chemistry.
   - ``Rupprecht2026`` — Batched isometry from Rupprecht & Wolk (2026) via
     Qualtran bloqs.
   - ``Ramacciotti2024`` — Permutation-based sparse state preparation from
@@ -29,27 +27,17 @@ from qiskit.compiler import transpile
 # Dependency checks
 try:
     from qdk_chemistry.algorithms import create
-    from qdk_chemistry.algorithms.state_preparation.sparse_isometry import (
-        gf2x_with_tracking,
-    )
     from qdk_chemistry.data import (
-        BasisSet,
+        AlgorithmRef,
         Circuit,
         Configuration,
-        Orbitals,
-        OrbitalType,
-        SciWavefunctionContainer,
-        Shell,
+        ModelOrbitals,
+        StateVectorContainer,
+        Wavefunction,
     )
-    from qdk_chemistry.data import Wavefunction as QDKWavefunction
-    from qdk_chemistry.data.circuit import QsharpFactoryData
-    from qdk_chemistry.utils.binary_encoding import _dense_qubits_size
-    from qdk_chemistry.utils.qsharp import QSHARP_UTILS
 
 except ImportError:
-    raise ImportError(
-        "ERROR: qdk_chemistry is required. See README.md."
-    )
+    raise ImportError("ERROR: qdk_chemistry is required. See README.md.")
 
 try:
     from sparse_state_preparation import SparseStatePreparation
@@ -62,19 +50,14 @@ except ImportError:
 
 try:
     from qualtran import QFxp
-    from qualtran.bloqs.state_preparation import (
-        sparse_state_preparation_via_rotations,
-    )
     from qualtran.bloqs.state_preparation.sparse_state_preparation_via_rotations import (
         SparseStatePreparationViaRotations,
     )
     from qualtran.resource_counting import QECGatesCost, QubitCount, get_cost_value
 except ImportError:
-    raise ImportError(
-        "ERROR: qualtran is required. See README.md."
-    )
+    raise ImportError("ERROR: qualtran is required. See README.md.")
 
-# number of phase bits and number of fractional bits required by the reference 
+# number of phase bits and number of fractional bits required by the reference
 # implementations but unused in the benchmarking
 PHASE_BITSIZE = 6
 NUM_FRAC = 6
@@ -99,6 +82,7 @@ _BASIS_GATES = [
 _CLIFFORD_GATES = {"x", "y", "z", "cx", "cz", "h", "s", "sdg", "swap"}
 _TOFFOLI_GATES = {"ccx", "ccz", "cswap"}
 
+
 @dataclass
 class ResourceEstimateData:
     """Resource estimate for a state preparation circuit or bloq.
@@ -118,87 +102,19 @@ class ResourceEstimateData:
     clifford_count: int
 
 
-def _create_test_basis_set(
-    num_atomic_orbitals: int, name: str = "test-basis"
-) -> BasisSet:
-    """Create a minimal basis set with exactly *num_atomic_orbitals* functions.
-
-    Args:
-        num_atomic_orbitals (int): Number of atomic orbital basis functions to
-            include in the basis set.
-        name (str): Label for the basis set. Defaults to ``"test-basis"``.
-
-    Returns:
-        BasisSet: A minimal ``BasisSet`` containing the requested number of
-            basis functions built from S- and P-type shells.
-    """
-    shells: list[Shell] = []
-    atom_index = 0
-    functions_created = 0
-    while functions_created < num_atomic_orbitals:
-        remaining = num_atomic_orbitals - functions_created
-        if remaining >= 3:
-            shell = Shell(
-                atom_index, OrbitalType.P, np.array([1.0, 0.5]), np.array([0.6, 0.4])
-            )
-            shells.append(shell)
-            functions_created += 3
-        else:
-            for _ in range(remaining):
-                shell = Shell(
-                    atom_index, OrbitalType.S, np.array([1.0]), np.array([1.0])
-                )
-                shells.append(shell)
-                functions_created += 1
-    return BasisSet(name, shells)
-
-
-def _to_qdk_wavefunction(
-    bitstrings: list[str], coeffs: list[complex]
-) -> QDKWavefunction:
+def _to_qdk_wavefunction(bitstrings: list[str], coeffs: list[complex]) -> Wavefunction:
     """Convert bitstrings and coefficients to a QDK ``Wavefunction``.
 
-    Used internally by ``gf2x`` and ``gf2x_binary_encoding``.  Bitstrings are
-    in little-endian qubit order (beta occupancies in the low half, alpha in
-    the high half) and the number of qubits must be even.
-
-    Args:
-        bitstrings (list[str]): Computational-basis bitstrings representing
-            Slater determinants in little-endian qubit order.  All strings must
-            have the same even length ``n_qubits``.
-        coeffs (list[complex]): Expansion coefficients corresponding to each
-            bitstring.  Must have the same length as ``bitstrings``.
-
-    Returns:
-        QDKWavefunction: A ``qdk_chemistry`` ``Wavefunction`` object built from
-            the supplied determinants and coefficients.
+    This uses the direct statevector container path preferred by the QDK tests.
     """
     n_qubits = len(bitstrings[0])
-    n_orbitals = n_qubits // 2
-
-    bs = _create_test_basis_set(n_orbitals)
-    orbs = Orbitals(np.eye(n_orbitals), None, None, bs, (list(range(n_orbitals)), []))
-
-    dets = []
-    for bitstring in bitstrings:
-        beta_reversed = bitstring[:n_orbitals]
-        alpha_reversed = bitstring[n_orbitals:]
-        alpha_str = alpha_reversed[::-1]
-        beta_str = beta_reversed[::-1]
-        det_chars = []
-        for a, b in zip(alpha_str, beta_str):
-            if a == "1" and b == "1":
-                det_chars.append("2")
-            elif a == "1" and b == "0":
-                det_chars.append("u")
-            elif a == "0" and b == "1":
-                det_chars.append("d")
-            else:
-                det_chars.append("0")
-        dets.append(Configuration("".join(det_chars)))
-
-    container = SciWavefunctionContainer(np.array(coeffs), dets, orbs)
-    return QDKWavefunction(container)
+    return Wavefunction(
+        StateVectorContainer(
+            np.array(coeffs),
+            [Configuration.from_bitstring(bitstring) for bitstring in bitstrings],
+            ModelOrbitals(n_qubits),
+        )
+    )
 
 
 def estimate_bloq(bloq: Any) -> ResourceEstimateData:
@@ -251,14 +167,10 @@ def estimate_qdk_circuit(circuit: Circuit) -> ResourceEstimateData:
 def dense_state_prep(n_qubits: int, sv: np.ndarray) -> ResourceEstimateData:
     """Estimate dense state prep resources from a pre-built statevector.
 
-    Normalises ``sv``, wraps it in a Q# ``MakeDenseStatePreparation`` factory,
-    and delegates to ``estimate_qdk_circuit``.
-
     Args:
         n_qubits (int): Number of qubits (log2 of the statevector length).
         sv (np.ndarray): Statevector of length ``2**n_qubits``.
-            May be complex-valued; imaginary parts must be negligible
-            (the Q# backend accepts only real amplitudes).
+            May be complex-valued; imaginary parts must be negligible.
             Will be L2-normalised before use.
 
     Returns:
@@ -268,24 +180,73 @@ def dense_state_prep(n_qubits: int, sv: np.ndarray) -> ResourceEstimateData:
         if np.max(np.abs(sv.imag)) > 1e-10:
             raise ValueError(
                 "Dense state preparation received non-negligible imaginary "
-                f"amplitudes (max |imag| = {np.max(np.abs(sv.imag)):.2e}). "
-                "The Q# MakeDenseStatePreparation backend supports only real "
-                "amplitudes."
+                f"amplitudes (max |imag| = {np.max(np.abs(sv.imag)):.2e})."
             )
         sv = sv.real.copy()
     norm = np.linalg.norm(sv)
     if norm > 0:
         sv = sv / norm
-    qsharp_factory = QsharpFactoryData(
-        program=QSHARP_UTILS.StatePreparation.MakeDenseStatePreparation,
-        parameter={
-            "rowMap": list(range(n_qubits)),
-            "stateVector": sv.tolist(),
-            "numQubits": n_qubits,
-        },
+
+    indices = np.flatnonzero(sv)
+    wavefunction = _to_qdk_wavefunction(
+        [
+            "".join(str((int(index) >> bit) & 1) for bit in range(n_qubits))
+            for index in indices
+        ],
+        sv[indices].tolist(),
     )
-    circuit = Circuit(qsharp_factory=qsharp_factory, encoding="jordan-wigner")
+    circuit = create("state_prep", "dense_pure_state").run(wavefunction)
     return estimate_qdk_circuit(circuit)
+
+
+def _subtract_dense_estimate(
+    combined: ResourceEstimateData, dense: ResourceEstimateData
+) -> ResourceEstimateData:
+    """Recover sparse-stage gate counts from a composed QDK estimate."""
+    residuals = [
+        combined.toffoli_count - dense.toffoli_count,
+        combined.rotation_count - dense.rotation_count,
+        combined.non_clifford_count - dense.non_clifford_count,
+        combined.clifford_count - dense.clifford_count,
+    ]
+    if min(residuals) < 0:
+        raise RuntimeError(
+            "Dense circuit counts exceed the composed sparse-isometry counts."
+        )
+    return ResourceEstimateData(
+        logical_qubits=combined.logical_qubits,
+        toffoli_count=residuals[0],
+        rotation_count=residuals[1],
+        non_clifford_count=residuals[2],
+        clifford_count=residuals[3],
+    )
+
+
+def _estimate_qdk_sparse_isometry(
+    bitstrings: list[str],
+    coeffs: list[complex],
+    *,
+    binary_encoding: bool,
+) -> tuple[ResourceEstimateData, ResourceEstimateData]:
+    """Estimate the public QDK sparse-isometry plugin and its dense substage."""
+    wavefunction = _to_qdk_wavefunction(bitstrings, coeffs)
+
+    dense_state_prep = create("state_prep", "dense_pure_state")
+    dense_circuit = dense_state_prep.run(wavefunction)
+
+    circuit = create(
+        "state_prep",
+        "sparse_isometry",
+        binary_encoding=binary_encoding,
+        dense_state_prep=AlgorithmRef("state_prep", "dense_pure_state"),
+        include_negative_controls=True,
+        measurement_based_uncompute=binary_encoding,
+    ).run(wavefunction)
+
+    combined_est = estimate_qdk_circuit(circuit)
+    dense_est = estimate_qdk_circuit(dense_circuit)
+    sparse_est = _subtract_dense_estimate(combined_est, dense_est)
+    return sparse_est, dense_est
 
 
 def gf2x(
@@ -303,12 +264,7 @@ def gf2x(
         tuple[ResourceEstimate, ResourceEstimate]: A pair
             ``(sparse_est, dense_est)``.
     """
-    wfn = _to_qdk_wavefunction(bitstrings, coeffs)
-    state_prep = create("state_prep", "sparse_isometry_gf2x")
-    params = state_prep._build_qsharp_state_prep_params(wfn)
-    dense_est = estimate_qdk_circuit(state_prep._create_dense(params))
-    sparse_est = estimate_qdk_circuit(state_prep._create_isometry(params))
-    return sparse_est, dense_est
+    return _estimate_qdk_sparse_isometry(bitstrings, coeffs, binary_encoding=False)
 
 
 def gf2x_binary_encoding(
@@ -316,10 +272,9 @@ def gf2x_binary_encoding(
 ) -> tuple[ResourceEstimateData, ResourceEstimateData]:
     """Run GF2+X with binary encoding via qdk_chemistry.
 
-    Applies GF2+X elimination with forward-only tracking to obtain a reduced
-    bitstring matrix, then uses batched Toffoli-based binary encoding for the
-    sparse isometry.  Falls back to plain ``gf2x`` when binary encoding offers
-    no qubit advantage.
+    Uses the QDK sparse-isometry plugin with batched Toffoli-based binary
+    encoding. QDK falls back to standard GF2+X when encoding offers no qubit
+    advantage.
 
     Args:
         bitstrings (list[str]): Computational-basis bitstrings representing
@@ -331,30 +286,11 @@ def gf2x_binary_encoding(
         tuple[ResourceEstimate, ResourceEstimate]: A pair
             ``(sparse_est, dense_est)``.
     """
-    n_qubits = len(bitstrings[0])
-    bitstring_matrix = np.array(
-        [[int(c) for c in bs] for bs in bitstrings], dtype=np.int8
-    ).T
-    gf2x_result = gf2x_with_tracking(
-        bitstring_matrix, skip_diagonal_reduction=True, forward_only=True
+    return _estimate_qdk_sparse_isometry(
+        bitstrings,
+        coeffs,
+        binary_encoding=True,
     )
-
-    num_rows, num_cols = gf2x_result.reduced_matrix.shape
-    if _dense_qubits_size(num_cols) >= num_rows:
-        return gf2x(bitstrings, coeffs)
-
-    state_prep = create(
-        "state_prep",
-        "sparse_isometry_binary_encoding",
-        include_negative_controls=True,
-        measurement_based_uncompute=True,
-    )
-    params = state_prep._build_binary_encoding_params(
-        gf2x_result, coeffs, n_qubits, bitstrings
-    )
-    dense_est = estimate_qdk_circuit(state_prep._create_dense(params))
-    sparse_est = estimate_qdk_circuit(state_prep._create_isometry(params))
-    return sparse_est, dense_est
 
 
 def Rupprecht2026(
