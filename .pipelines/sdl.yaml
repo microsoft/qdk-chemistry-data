@@ -9,8 +9,13 @@
 # integrity check that GitHub Actions CI also runs; SDL analysis is the purpose
 # of the pipeline.
 #
-# This file is inert until the pipeline is registered in Azure DevOps against
-# this GitHub repository.
+# The Official template is required, not a stylistic choice: the
+# Azure-Pipelines-DevTools-EO pool enforces an ExtendsCheck policy that only
+# permits pipelines extending v1/1ES.Official.PipelineTemplate.yml. Extending
+# the Unofficial template fails the checkpoint before any job runs.
+#
+# Registered in Azure DevOps as ms-azurequantum/AzureQuantum pipeline
+# qdk-chemistry-data-gh-sdl (id 1698).
 
 trigger: none
 pr: none
@@ -33,7 +38,7 @@ resources:
     path: qdk-chemistry-data
 
 extends:
-  template: v1/1ES.Unofficial.PipelineTemplate.yml@1ESPipelineTemplates
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
     settings:
       networkIsolationPolicy: Permissive,CFSClean,CFSClean2,CFSClean3
