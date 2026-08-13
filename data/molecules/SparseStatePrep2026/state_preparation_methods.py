@@ -199,33 +199,53 @@ def dense_state_prep(n_qubits: int, sv: np.ndarray) -> ResourceEstimateData:
     return estimate_qdk_circuit(circuit)
 
 
+def _subtract_dense_estimate(
+    combined: ResourceEstimateData, dense: ResourceEstimateData
+) -> ResourceEstimateData:
+    """Recover sparse-stage gate counts from a composed QDK estimate."""
+    residuals = [
+        combined.toffoli_count - dense.toffoli_count,
+        combined.rotation_count - dense.rotation_count,
+        combined.non_clifford_count - dense.non_clifford_count,
+        combined.clifford_count - dense.clifford_count,
+    ]
+    if min(residuals) < 0:
+        raise RuntimeError(
+            "Dense circuit counts exceed the composed sparse-isometry counts."
+        )
+    return ResourceEstimateData(
+        logical_qubits=combined.logical_qubits,
+        toffoli_count=residuals[0],
+        rotation_count=residuals[1],
+        non_clifford_count=residuals[2],
+        clifford_count=residuals[3],
+    )
+
+
 def _estimate_qdk_sparse_isometry(
     bitstrings: list[str],
     coeffs: list[complex],
     *,
     binary_encoding: bool,
 ) -> tuple[ResourceEstimateData, ResourceEstimateData]:
-    """Estimate the public QDK sparse-isometry plugin as a composed circuit."""
+    """Estimate the public QDK sparse-isometry plugin and its dense substage."""
     wavefunction = _to_qdk_wavefunction(bitstrings, coeffs)
 
-    circuit = create(
+    state_prep = create(
         "state_prep",
         "sparse_isometry",
         binary_encoding=binary_encoding,
         dense_state_prep=AlgorithmRef("state_prep", "dense_pure_state"),
         include_negative_controls=True,
         measurement_based_uncompute=binary_encoding,
-    ).run(wavefunction)
-
-    # QDK does not expose the transformed dense-loading subcircuit. Keep the
-    # public composed estimate intact rather than inferring a split by subtraction.
-    return estimate_qdk_circuit(circuit), ResourceEstimateData(
-        logical_qubits=0,
-        toffoli_count=0,
-        rotation_count=0,
-        non_clifford_count=0,
-        clifford_count=0,
     )
+    circuit = state_prep.run(wavefunction)
+    dense_circuit = state_prep.create_dense(wavefunction)
+
+    combined_est = estimate_qdk_circuit(circuit)
+    dense_est = estimate_qdk_circuit(dense_circuit)
+    sparse_est = _subtract_dense_estimate(combined_est, dense_est)
+    return sparse_est, dense_est
 
 
 def gf2x(
