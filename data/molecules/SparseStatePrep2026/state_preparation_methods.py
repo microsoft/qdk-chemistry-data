@@ -125,7 +125,7 @@ def estimate_bloq(bloq: Any) -> ResourceEstimateData:
             ``QECGatesCost`` resource-counting protocols.
 
     Returns:
-        ResourceEstimate: Resource estimate for the bloq.
+        ResourceEstimateData: Resource estimate for the bloq.
     """
     qubit_count = get_cost_value(bloq, QubitCount())
     gate_counts = get_cost_value(bloq, QECGatesCost())

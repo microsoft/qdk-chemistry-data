@@ -95,7 +95,7 @@ def _estimate_method(
     """
     num_qubits = len(bitstrings[0])
     num_configs = len(bitstrings)
-    if method_name in ("gf2x") and num_qubits > gf2x_max_qubits:
+    if method_name == "gf2x" and num_qubits > gf2x_max_qubits:
         Logger.info(
             f"Skipping {method_name} for q={num_qubits} (cap={gf2x_max_qubits})"
         )
@@ -112,9 +112,9 @@ def _estimate_method(
         fn = methods[method_name]
         return fn(bitstrings, coeffs)
 
-    except BaseException:
+    except Exception as exc:
         Logger.warn(
-            f"Method {method_name} failed (q={num_qubits}, configs={num_configs})"
+            f"Method {method_name} failed (q={num_qubits}, configs={num_configs}): {exc}"
         )
     return None
 
@@ -519,7 +519,7 @@ if __name__ == "__main__":
     """Run the benchmark when this script is executed directly.
 
     The command-line to create the full benchmark and plot is:
-    python estimate_random_matrix.py --plot
+    python estimate_random_matrix.py
     """
     Logger.set_global_level("info")
     main()
