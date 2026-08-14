@@ -580,7 +580,7 @@
                 "toffoli_count": 0,
                 "rotation_count": 0,
                 "non_clifford_count": 0,
-                "clifford_count": 19
+                "clifford_count": 17
             },
             "dense": {
                 "logical_qubits": 16,
@@ -601,7 +601,7 @@
                 "toffoli_count": 0,
                 "rotation_count": 0,
                 "non_clifford_count": 0,
-                "clifford_count": 19
+                "clifford_count": 17
             },
             "dense": {
                 "logical_qubits": 16,
@@ -622,7 +622,7 @@
                 "toffoli_count": 0,
                 "rotation_count": 0,
                 "non_clifford_count": 0,
-                "clifford_count": 23
+                "clifford_count": 21
             },
             "dense": {
                 "logical_qubits": 16,
@@ -643,7 +643,7 @@
                 "toffoli_count": 0,
                 "rotation_count": 0,
                 "non_clifford_count": 0,
-                "clifford_count": 23
+                "clifford_count": 21
             },
             "dense": {
                 "logical_qubits": 16,
@@ -664,7 +664,7 @@
                 "toffoli_count": 0,
                 "rotation_count": 0,
                 "non_clifford_count": 0,
-                "clifford_count": 30
+                "clifford_count": 28
             },
             "dense": {
                 "logical_qubits": 16,
@@ -685,7 +685,7 @@
                 "toffoli_count": 0,
                 "rotation_count": 0,
                 "non_clifford_count": 0,
-                "clifford_count": 32
+                "clifford_count": 30
             },
             "dense": {
                 "logical_qubits": 16,
@@ -706,7 +706,7 @@
                 "toffoli_count": 0,
                 "rotation_count": 0,
                 "non_clifford_count": 0,
-                "clifford_count": 34
+                "clifford_count": 32
             },
             "dense": {
                 "logical_qubits": 16,
@@ -727,7 +727,7 @@
                 "toffoli_count": 0,
                 "rotation_count": 0,
                 "non_clifford_count": 0,
-                "clifford_count": 34
+                "clifford_count": 32
             },
             "dense": {
                 "logical_qubits": 16,
@@ -748,7 +748,7 @@
                 "toffoli_count": 0,
                 "rotation_count": 0,
                 "non_clifford_count": 0,
-                "clifford_count": 34
+                "clifford_count": 32
             },
             "dense": {
                 "logical_qubits": 16,
@@ -769,7 +769,7 @@
                 "toffoli_count": 0,
                 "rotation_count": 0,
                 "non_clifford_count": 0,
-                "clifford_count": 34
+                "clifford_count": 32
             },
             "dense": {
                 "logical_qubits": 16,
@@ -790,7 +790,7 @@
                 "toffoli_count": 0,
                 "rotation_count": 0,
                 "non_clifford_count": 0,
-                "clifford_count": 34
+                "clifford_count": 32
             },
             "dense": {
                 "logical_qubits": 16,
@@ -811,7 +811,7 @@
                 "toffoli_count": 0,
                 "rotation_count": 0,
                 "non_clifford_count": 0,
-                "clifford_count": 34
+                "clifford_count": 32
             },
             "dense": {
                 "logical_qubits": 16,
