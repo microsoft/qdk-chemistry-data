@@ -388,7 +388,10 @@ def _bitstrings_to_coefficient_map(
     """
     coef_map: dict[int, complex] = {}
     for bs, cf in zip(bitstrings, coeffs):
-        coef_map[int(bs, 2)] = cf
+        idx = int(bs, 2)
+        if idx in coef_map:
+            raise ValueError(f"Duplicate bitstring encountered: {bs!r}")
+        coef_map[idx] = cf
     return coef_map
 
 
