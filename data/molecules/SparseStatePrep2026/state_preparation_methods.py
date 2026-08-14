@@ -1,6 +1,6 @@
 """State preparation methods for sparse quantum wavefunctions.
 
-All four methods accept bitstrings and coefficients:
+All four methods accept MSB-first bitstrings and coefficients:
 
   - ``gf2x`` — GF2+X elimination-based sparse isometry via qdk_chemistry.
   - ``gf2x_binary_encoding`` — GF2+X with binary encoding via qdk_chemistry.
@@ -106,18 +106,29 @@ class ResourceEstimateData:
 
 
 def _to_qdk_wavefunction(bitstrings: list[str], coeffs: list[complex]) -> Wavefunction:
-    """Convert bitstrings and coefficients to a QDK ``Wavefunction``.
+    """Convert MSB-first bitstrings and coefficients to a QDK ``Wavefunction``.
 
-    This uses the direct statevector container path preferred by the QDK tests.
+    QDK configuration strings list ``q[0]`` first, so reverse the benchmark's
+    MSB-first strings at this boundary.
     """
     n_qubits = len(bitstrings[0])
     return Wavefunction(
         StateVectorContainer(
             np.array(coeffs),
-            [Configuration.from_bitstring(bitstring) for bitstring in bitstrings],
+            [Configuration.from_bitstring(bitstring[::-1]) for bitstring in bitstrings],
             ModelOrbitals(n_qubits),
         )
     )
+
+
+def bitstring_from_qubit_occupations(occupations: np.ndarray) -> str:
+    """Convert ``q[0]``-first occupations to an MSB-first bitstring."""
+    return "".join(str(int(bit)) for bit in reversed(occupations))
+
+
+def bitstring_from_basis_index(index: int, n_qubits: int) -> str:
+    """Convert a computational-basis index to an MSB-first bitstring."""
+    return f"{index:0{n_qubits}b}"
 
 
 def estimate_bloq(bloq: Any) -> ResourceEstimateData:
@@ -214,10 +225,7 @@ def dense_state_prep(n_qubits: int, sv: np.ndarray) -> ResourceEstimateData:
 
     indices = np.flatnonzero(sv)
     wavefunction = _to_qdk_wavefunction(
-        [
-            "".join(str((int(index) >> bit) & 1) for bit in range(n_qubits))
-            for index in indices
-        ],
+        [bitstring_from_basis_index(int(index), n_qubits) for index in indices],
         sv[indices].tolist(),
     )
     circuit = create("state_prep", "dense_pure_state").run(wavefunction)

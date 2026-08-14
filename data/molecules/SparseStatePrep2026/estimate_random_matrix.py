@@ -35,6 +35,7 @@ from state_preparation_methods import (
     Ramacciotti2024,
     ResourceEstimateData,
     Rupprecht2026,
+    bitstring_from_qubit_occupations,
     gf2x,
     gf2x_binary_encoding,
 )
@@ -69,6 +70,7 @@ def _save_checkpoint(
     try:
         with open(temp_path, "w") as f:
             json.dump(results, f, indent=2, default=str)
+            f.write("\n")
         temp_path.replace(json_path)
     except Exception:
         Logger.warn("Failed to save checkpoint")
@@ -85,7 +87,7 @@ def _estimate_method(
     Args:
         method_name: One of ``"gf2x"``, ``"gf2x_binary_encoding"``,
             ``"Rupprecht2026"``, ``"Ramacciotti2024"``.
-        bitstrings: Little-endian occupation bitstrings.
+        bitstrings: MSB-first occupation bitstrings.
         coeffs: Normalised coefficients aligned with *bitstrings*.
         gf2x_max_qubits: Upper qubit limit for the ``"gf2x"`` method.
 
@@ -180,8 +182,7 @@ def run_benchmark(
 
         # Convert binary matrix rows to bitstrings and build a QDK Wavefunction
         bitstrings = [
-            "".join(str(int(bit)) for bit in reversed(row))
-            for row in full_matrix[:num_configs]
+            bitstring_from_qubit_occupations(row) for row in full_matrix[:num_configs]
         ]
         Logger.info(f"  q={num_qubits} configs={num_configs}")
 

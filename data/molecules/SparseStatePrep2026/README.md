@@ -45,6 +45,9 @@ The random benchmark uses a fixed seed of 42. It constructs a half-filled
 system with the number of configurations equal to the number of qubits and
 samples excitations from the Hartree-Fock determinant.
 
+Benchmark bitstrings are MSB-first. Backend adapters convert them to native
+ordering, including QDK's `q[0]`-first configuration strings.
+
 The compared methods are:
 
 - `gf2x`: QDK/Chemistry GF2+X sparse isometry.

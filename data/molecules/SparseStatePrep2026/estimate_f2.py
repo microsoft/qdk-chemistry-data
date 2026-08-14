@@ -426,6 +426,7 @@ def main() -> None:
     }
     with open(json_path, "w") as f:
         json.dump(serializable, f, indent=4)
+        f.write("\n")
 
     plot_performance_lines(results, name, fig_dir=figures_dir)
     plot_stacked_resources(results, name, fig_dir=figures_dir)
