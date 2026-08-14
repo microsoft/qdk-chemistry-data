@@ -18,10 +18,13 @@ Also provides helpers shared across methods: ``estimate_bloq`` and
 # Licensed under the MIT License. See LICENSE in the project root for license information.
 # --------------------------------------------------------------------------------------------
 
+from collections import Counter
 from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
+from qiskit.circuit import QuantumCircuit
+from qiskit.circuit.controlflow import ControlFlowOp, IfElseOp
 from qiskit.compiler import transpile
 
 # Dependency checks
@@ -140,6 +143,28 @@ def estimate_bloq(bloq: Any) -> ResourceEstimateData:
     )
 
 
+def _count_qiskit_operations(circuit: QuantumCircuit) -> Counter[str]:
+    """Count operations recursively using worst-case ``if_else`` branches."""
+    counts: Counter[str] = Counter()
+    for instruction in circuit.data:
+        operation = instruction.operation
+        if not isinstance(operation, ControlFlowOp):
+            counts[operation.name] += 1
+            continue
+        if not isinstance(operation, IfElseOp):
+            raise NotImplementedError(
+                f"Unsupported Qiskit control-flow operation: {operation.name}"
+            )
+
+        branch_counts = [_count_qiskit_operations(block) for block in operation.blocks]
+        operation_names = {
+            name for branch_count in branch_counts for name in branch_count
+        }
+        for name in operation_names:
+            counts[name] += max(branch_count[name] for branch_count in branch_counts)
+    return counts
+
+
 def estimate_qdk_circuit(circuit: Circuit) -> ResourceEstimateData:
     """Estimate resources for a qdk_chemistry Circuit.
 
@@ -151,7 +176,7 @@ def estimate_qdk_circuit(circuit: Circuit) -> ResourceEstimateData:
     """
     qc = circuit.get_qiskit_circuit()
     qc = transpile(qc, basis_gates=_BASIS_GATES, optimization_level=0)
-    ops = qc.count_ops()
+    ops = _count_qiskit_operations(qc)
     toffoli_count = sum(ops.get(g, 0) for g in _TOFFOLI_GATES)
     rotation_count = ops.get("rz", 0)
     clifford_count = sum(ops.get(g, 0) for g in _CLIFFORD_GATES)
