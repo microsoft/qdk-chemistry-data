@@ -52,14 +52,6 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
   python generate_f2.py
 ```
 
-This generation was validated on Ubuntu 24.04 with Python 3.12.3, GCC 13.3.0,
-CMake 3.28.3, NumPy 2.3.5, SciPy 1.18.0, PySCF 2.12.0, OpenBLAS 0.3.26, and
-libgomp 14.2.0. The no-dependency reinstall deliberately retains QDK 1.30.0
-from the resource environment while replacing only qdk-chemistry. Install the
-Rupprecht and Wolk wheel from the Zenodo archive before importing the benchmark
-scripts. Other BLAS implementations are not validated for byte-level
-wavefunction reproduction.
-
 ## Methodology
 
 The eight wavefunctions in `data/input_wavefunctions.json` were extracted from
