@@ -1,5 +1,5 @@
 # Resource-estimation environment for the committed JSON and figures.
-qdk-chemistry[qiskit-extras] @ git+https://github.com/microsoft/qdk-chemistry.git@3e677ecb4335a19c0e2df3ecaddcbb69aa390233#subdirectory=python
+qdk-chemistry[qiskit-extras] @ git+https://github.com/microsoft/qdk-chemistry.git@39ea175d191324e700a775caa9b933fe93d885d8#subdirectory=python
 qdk==1.30.0
 qsharp==1.30.0
 qualtran==0.7.0

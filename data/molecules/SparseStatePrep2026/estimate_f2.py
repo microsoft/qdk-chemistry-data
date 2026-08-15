@@ -25,8 +25,6 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
-from qdk_chemistry.algorithms import create
-from qdk_chemistry.data import Structure
 from state_preparation_methods import (
     BenchmarkResult,
     Ramacciotti2024,
@@ -35,101 +33,6 @@ from state_preparation_methods import (
     gf2x,
     gf2x_binary_encoding,
 )
-
-
-def generate_f2_wavefunction(
-    xyz_path: Path,
-    basis: str = "def2-svp",
-    active_alpha: int = 5,
-    active_beta: int = 5,
-    active_orbitals: int = 8,
-    num_determinants: int = 14,
-) -> dict[str, Any]:
-    """Generate the neutral-F2 CAS(10e,8o) record from an XYZ geometry."""
-    structure = Structure.from_xyz_file(xyz_path)
-    hf_energy, hf_wavefunction = create("scf_solver").run(
-        structure,
-        charge=0,
-        spin_multiplicity=1,
-        basis_or_guess=basis,
-    )
-
-    selector = create("active_space_selector", "qdk_valence")
-    selector.settings().set("num_active_electrons", active_alpha + active_beta)
-    selector.settings().set("num_active_orbitals", active_orbitals)
-    active_wavefunction = selector.run(hf_wavefunction)
-    orbitals = active_wavefunction.get_orbitals()
-    hamiltonian = create("hamiltonian_constructor", "qdk").run(orbitals)
-
-    casci_energy, casci_wavefunction = create(
-        "multi_configuration_calculator", "macis_cas"
-    ).run(hamiltonian, active_alpha, active_beta)
-    top_determinants = casci_wavefunction.get_top_determinants(num_determinants)
-    projected_energy, projected_wavefunction = create(
-        "projected_multi_configuration_calculator", "macis_pmc"
-    ).run(hamiltonian, list(top_determinants))
-
-    determinants = projected_wavefunction.get_active_determinants()
-    coefficients = [
-        complex(value) for value in projected_wavefunction.get_coefficients()
-    ]
-    max_imaginary = max((abs(value.imag) for value in coefficients), default=0.0)
-    if max_imaginary > 1e-10:
-        raise ValueError(
-            "F2 generation produced complex coefficients "
-            f"(max |imag| = {max_imaginary:.2e})."
-        )
-    real_coefficients = [value.real for value in coefficients]
-    total_orbitals = len(hf_wavefunction.get_orbitals().get_energies_alpha())
-    inactive_orbitals = int(
-        (structure.get_total_nuclear_charge() - active_alpha - active_beta) // 2
-    )
-
-    return {
-        "structure": {
-            "num_atoms": structure.get_num_atoms(),
-            "composition": "F2",
-            "total_mass_amu": structure.get_total_mass(),
-            "nuclear_repulsion_energy_eh": (
-                structure.calculate_nuclear_repulsion_energy()
-            ),
-        },
-        "scf_energy_hartree": hf_energy,
-        "orbitals_summary": {
-            "aos": orbitals.get_num_atomic_orbitals(),
-            "mos": total_orbitals,
-            "active_orbitals": {
-                "alpha": active_orbitals,
-                "beta": active_orbitals,
-            },
-            "inactive_orbitals": {
-                "alpha": inactive_orbitals,
-                "beta": inactive_orbitals,
-            },
-        },
-        "casci_energies_hartree": [casci_energy],
-        "initial_casci_energy_hartree": casci_energy,
-        "hamiltonian_summaries": [
-            {
-                "active_orbitals": active_orbitals,
-                "total_orbitals": total_orbitals,
-                "core_energy": hamiltonian.get_core_energy(),
-            }
-        ],
-        "sparse_ci_finder": {
-            "n_dets": len(determinants),
-            "energy_hartree": projected_energy,
-            "delta_e_mhartree": 1000 * (projected_energy - casci_energy),
-            "determinants": [
-                {"det": str(determinant), "coeff": coefficient}
-                for determinant, coefficient in zip(
-                    determinants, real_coefficients, strict=True
-                )
-            ],
-        },
-        "name": "F2",
-        "xyz": xyz_path.read_text(),
-    }
 
 
 @dataclass
@@ -505,17 +408,6 @@ def main() -> None:
         help="Path to the F2 molecular record. Default: %(default)s",
     )
     parser.add_argument(
-        "--xyz",
-        default=Path(__file__).parent / "data" / "structures" / "f2.xyz",
-        type=Path,
-        help="F2 geometry used with --generate-only. Default: %(default)s",
-    )
-    parser.add_argument(
-        "--generate-only",
-        action="store_true",
-        help="Regenerate the F2 molecular record without running resource estimates.",
-    )
-    parser.add_argument(
         "--output-dir",
         type=Path,
         default=Path(__file__).parent / "output",
@@ -523,13 +415,6 @@ def main() -> None:
         help="Directory for JSON results and figures. Default: %(default)s",
     )
     args = parser.parse_args()
-
-    if args.generate_only:
-        args.f2_data.parent.mkdir(parents=True, exist_ok=True)
-        args.f2_data.write_text(
-            json.dumps([generate_f2_wavefunction(args.xyz)], indent=2) + "\n"
-        )
-        return
 
     name = "f2"
     output_dir: Path = args.output_dir
@@ -540,6 +425,12 @@ def main() -> None:
     results = run_f2_benchmark(args.f2_data)
 
     json_path = output_dir / f"{name}_matrix_results.json"
+    script_dir = Path(__file__).parent
+    input_path = (
+        args.f2_data.relative_to(script_dir).as_posix()
+        if args.f2_data.is_relative_to(script_dir)
+        else str(args.f2_data)
+    )
     serializable = {
         method: [asdict(entry) for entry in entries]
         for method, entries in results.items()
@@ -547,7 +438,7 @@ def main() -> None:
     payload = {
         "metadata": {
             "molecule": "F2",
-            "input": str(args.f2_data),
+            "input": input_path,
             "environment": benchmark_environment(),
         },
         "data": serializable,

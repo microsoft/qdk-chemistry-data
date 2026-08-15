@@ -92,7 +92,7 @@ _BASIS_GATES = [
 ]
 _CLIFFORD_GATES = {"x", "y", "z", "cx", "cz", "h", "s", "sdg", "swap"}
 _TOFFOLI_GATES = {"ccx", "ccz", "cswap"}
-_QDK_CHEMISTRY_REVISION = "3e677ecb4335a19c0e2df3ecaddcbb69aa390233"
+_QDK_CHEMISTRY_REVISION = "39ea175d191324e700a775caa9b933fe93d885d8"
 _SPARSE_REFERENCE_SOURCE_SHA256 = (
     "4aa9ccdf5a4ae25f389e93dc8c9d7cada71f404f6a64d243038f374da81f6456"
 )

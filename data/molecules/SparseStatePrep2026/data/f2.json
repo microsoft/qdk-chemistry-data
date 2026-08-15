@@ -6,7 +6,7 @@
       "total_mass_amu": 37.996,
       "nuclear_repulsion_energy_eh": 30.69064592386509
     },
-    "scf_energy_hartree": -198.50845418513984,
+    "scf_energy_hartree": -198.50845418512333,
     "orbitals_summary": {
       "aos": 28,
       "mos": 28,
@@ -15,81 +15,110 @@
         "beta": 8
       },
       "inactive_orbitals": {
-        "alpha": 4,
-        "beta": 4
+        "alpha": 2,
+        "beta": 2
+      }
+    },
+    "generation": {
+      "qdk_chemistry_revision": "aab310b108342456bf6b1017d01ccb8e31d2d52d",
+      "thread_environment": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1"
+      },
+      "selected_active_electrons": 14,
+      "cas_electrons": {
+        "alpha": 5,
+        "beta": 5
+      },
+      "determinant_tie_tolerance": 5e-07,
+      "compatibility_gauge": {
+        "indexing": "zero-based full MO columns",
+        "swap": [
+          4,
+          5
+        ],
+        "phase_flips": [
+          3,
+          6
+        ],
+        "rotation_pair": [
+          4,
+          5
+        ],
+        "rotation_degrees": 67.0846143033431
       }
     },
     "casci_energies_hartree": [
-      -198.5828871466732
+      -192.75465442984597
     ],
-    "initial_casci_energy_hartree": -198.5828871466732,
+    "initial_casci_energy_hartree": -192.75465442984597,
     "hamiltonian_summaries": [
       {
         "active_orbitals": 8,
         "total_orbitals": 28,
-        "core_energy": -165.21558173188464
+        "core_energy": -132.32974205367697
       }
     ],
     "sparse_ci_finder": {
       "n_dets": 14,
-      "energy_hartree": -198.57874975051874,
-      "delta_e_mhartree": 4.13739615444797,
+      "energy_hartree": -192.58787831622922,
+      "delta_e_mhartree": 166.7761136167485,
       "determinants": [
         {
           "det": "22222000",
-          "coeff": 0.9735367085825581
+          "coeff": -0.6556493071159549
+        },
+        {
+          "det": "22202020",
+          "coeff": 0.3523690379193967
         },
         {
           "det": "22022200",
-          "coeff": -0.20800612114373213
+          "coeff": 0.33914157467144623
         },
         {
-          "det": "22220200",
-          "coeff": -0.041759105147506956
+          "det": "22002220",
+          "coeff": -0.2920977332255789
         },
         {
-          "det": "22202200",
-          "coeff": -0.04205406811297687
+          "det": "22du2du0",
+          "coeff": 0.22760009343331739
         },
         {
-          "det": "22ud2d0u",
-          "coeff": 0.03083303215506161
+          "det": "22ud2ud0",
+          "coeff": 0.176317136300566
         },
         {
-          "det": "22du2u0d",
-          "coeff": 0.03083303215506114
+          "det": "22220002",
+          "coeff": 0.12233294867626916
         },
         {
-          "det": "22uu2d0d",
-          "coeff": -0.028195171631782735
+          "det": "22du2200",
+          "coeff": -0.13259851532572609
         },
         {
-          "det": "22dd2u0u",
-          "coeff": -0.028195171631782652
+          "det": "22du2020",
+          "coeff": 0.1492840341818503
         },
         {
-          "det": "20222002",
-          "coeff": -0.024872688195593767
+          "det": "22202ud0",
+          "coeff": -0.14023368580466616
         },
         {
-          "det": "22202002",
-          "coeff": -0.02073999916910932
+          "det": "22022ud0",
+          "coeff": 0.18867086785183657
         },
         {
-          "det": "22d2uu0d",
-          "coeff": 0.015684713352942754
+          "det": "22202du0",
+          "coeff": -0.14861721200101635
         },
         {
-          "det": "22u2dd0u",
-          "coeff": 0.015684713352938445
+          "det": "22022du0",
+          "coeff": 0.12839106736013178
         },
         {
-          "det": "22d2du0u",
-          "coeff": -0.014409325130422484
-        },
-        {
-          "det": "22u2ud0d",
-          "coeff": -0.014409325130419693
+          "det": "22ud2200",
+          "coeff": -0.11859786816258279
         }
       ]
     },
