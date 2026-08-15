@@ -15,7 +15,7 @@ This script:
 
 # --------------------------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT License. See LICENSE in the project root for license information.
+# Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
 
 import argparse
@@ -35,6 +35,7 @@ from state_preparation_methods import (
     Ramacciotti2024,
     ResourceEstimateData,
     Rupprecht2026,
+    benchmark_environment,
     bitstring_from_qubit_occupations,
     gf2x,
     gf2x_binary_encoding,
@@ -62,6 +63,7 @@ def _save_checkpoint(
             "seed": seed,
             "qubits_list": qubits_list,
             "num_configs_ratio": num_configs_ratio,
+            "environment": benchmark_environment(),
         },
         "data": [asdict(d) for d in data],
     }

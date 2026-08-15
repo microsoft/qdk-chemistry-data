@@ -15,14 +15,18 @@ Also provides helpers shared across methods: ``estimate_bloq`` and
 
 # --------------------------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT License. See LICENSE in the project root for license information.
+# Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
 
 from collections import Counter
 from dataclasses import dataclass
+from functools import cache
+from importlib.metadata import version as distribution_version
+import platform
 from typing import Any
 
 import numpy as np
+from qdk import TargetProfile
 from qiskit.circuit import QuantumCircuit
 from qiskit.circuit.controlflow import ControlFlowOp, IfElseOp
 from qiskit.compiler import transpile
@@ -37,6 +41,10 @@ try:
         ModelOrbitals,
         StateVectorContainer,
         Wavefunction,
+    )
+    from qdk_chemistry.utils.qsharp import (
+        create_qsharp_context,
+        use_qsharp_context,
     )
 
 except ImportError:
@@ -84,6 +92,39 @@ _BASIS_GATES = [
 ]
 _CLIFFORD_GATES = {"x", "y", "z", "cx", "cz", "h", "s", "sdg", "swap"}
 _TOFFOLI_GATES = {"ccx", "ccz", "cswap"}
+_QDK_CHEMISTRY_REVISION = "3e677ecb4335a19c0e2df3ecaddcbb69aa390233"
+_SPARSE_REFERENCE_SOURCE_SHA256 = (
+    "4aa9ccdf5a4ae25f389e93dc8c9d7cada71f404f6a64d243038f374da81f6456"
+)
+
+
+def benchmark_environment() -> dict[str, Any]:
+    """Return the resolved package versions used by the benchmark."""
+    return {
+        "python": platform.python_version(),
+        "platform": platform.platform(),
+        "qdk-chemistry": {
+            "version": distribution_version("qdk-chemistry"),
+            "revision": _QDK_CHEMISTRY_REVISION,
+        },
+        "qdk": distribution_version("qdk"),
+        "qsharp": distribution_version("qsharp"),
+        "qualtran": distribution_version("qualtran"),
+        "qiskit": distribution_version("qiskit"),
+        "numpy": distribution_version("numpy"),
+        "matplotlib": distribution_version("matplotlib"),
+        "sparse-state-preparation": {
+            "version": distribution_version("sparse-state-preparation"),
+            "source": "https://doi.org/10.5281/zenodo.18234600",
+            "source_archive_sha256": _SPARSE_REFERENCE_SOURCE_SHA256,
+        },
+    }
+
+
+@cache
+def _adaptive_qsharp_context() -> Any:
+    """Create the shared Adaptive Q# context for measured uncomputation."""
+    return create_qsharp_context(target_profile=TargetProfile.Adaptive_RIF)
 
 
 @dataclass
@@ -260,6 +301,7 @@ def _estimate_qdk_sparse_isometry(
     coeffs: list[complex],
     *,
     binary_encoding: bool,
+    measurement_based_uncompute: bool,
 ) -> tuple[ResourceEstimateData, ResourceEstimateData]:
     """Estimate the public QDK sparse-isometry plugin and its dense substage."""
     wavefunction = _to_qdk_wavefunction(bitstrings, coeffs)
@@ -270,13 +312,19 @@ def _estimate_qdk_sparse_isometry(
         binary_encoding=binary_encoding,
         dense_state_prep=AlgorithmRef("state_prep", "dense_pure_state"),
         include_negative_controls=True,
-        measurement_based_uncompute=binary_encoding,
+        measurement_based_uncompute=measurement_based_uncompute,
     )
-    circuit = state_prep.run(wavefunction)
-    dense_circuit = state_prep.create_dense(wavefunction)
-
-    combined_est = estimate_qdk_circuit(circuit)
-    dense_est = estimate_qdk_circuit(dense_circuit)
+    if measurement_based_uncompute:
+        with use_qsharp_context(_adaptive_qsharp_context()):
+            circuit = state_prep.run(wavefunction)
+            combined_est = estimate_qdk_circuit(circuit)
+            dense_circuit = state_prep.create_dense(wavefunction)
+            dense_est = estimate_qdk_circuit(dense_circuit)
+    else:
+        circuit = state_prep.run(wavefunction)
+        combined_est = estimate_qdk_circuit(circuit)
+        dense_circuit = state_prep.create_dense(wavefunction)
+        dense_est = estimate_qdk_circuit(dense_circuit)
     sparse_est = _subtract_dense_estimate(combined_est, dense_est)
     return sparse_est, dense_est
 
@@ -296,23 +344,32 @@ def gf2x(
         tuple[ResourceEstimate, ResourceEstimate]: A pair
             ``(sparse_est, dense_est)``.
     """
-    return _estimate_qdk_sparse_isometry(bitstrings, coeffs, binary_encoding=False)
+    return _estimate_qdk_sparse_isometry(
+        bitstrings,
+        coeffs,
+        binary_encoding=False,
+        measurement_based_uncompute=False,
+    )
 
 
 def gf2x_binary_encoding(
-    bitstrings: list[str], coeffs: list[complex]
+    bitstrings: list[str],
+    coeffs: list[complex],
+    measurement_based_uncompute: bool = True,
 ) -> tuple[ResourceEstimateData, ResourceEstimateData]:
     """Run GF2+X with binary encoding via qdk_chemistry.
 
     Uses the QDK sparse-isometry plugin with batched Toffoli-based binary
-    encoding. QDK falls back to standard GF2+X when encoding offers no qubit
-    advantage.
+    encoding. Measured uncomputation explicitly selects the Adaptive Q# profile;
+    QDK otherwise uses coherent ``Std.Intrinsic.AND`` uncomputation.
 
     Args:
         bitstrings (list[str]): Computational-basis bitstrings representing
             the non-zero amplitudes of the target state.
         coeffs (list[complex]): Expansion coefficients corresponding to
             each bitstring.
+        measurement_based_uncompute: Use measurement and feed-forward to
+            uncompute binary-encoding ANDs. Defaults to ``True``.
 
     Returns:
         tuple[ResourceEstimate, ResourceEstimate]: A pair
@@ -322,6 +379,7 @@ def gf2x_binary_encoding(
         bitstrings,
         coeffs,
         binary_encoding=True,
+        measurement_based_uncompute=measurement_based_uncompute,
     )
 
 

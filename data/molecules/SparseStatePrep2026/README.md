@@ -16,16 +16,16 @@ determinant matrices and molecular wavefunctions.
 
 ## Reproducibility
 
-Install the script dependencies:
+Use Python 3.12 in the qdk-chemistry development container. Install the exact
+Python environment:
 
 ```bash
-pip install qdk-chemistry[qiskit] qualtran numpy matplotlib qiskit
+python -m pip install --requirement requirements-lock.txt
 ```
 
 The Rupprecht and Wolk reference implementation is distributed under Apache
-License 2.0 through [Zenodo record 18234600](https://zenodo.org/records/18234600).
-Install it as the importable `sparse_state_preparation` package before running
-the resource estimation benchmark.
+License 2.0 through immutable
+[Zenodo record 18234600](https://doi.org/10.5281/zenodo.18234600).
 
 Run the full resource estimates from this directory:
 
@@ -36,10 +36,14 @@ python estimate_f2.py
 
 ## Methodology
 
-The wavefunctions in `data/input_wavefunctions.json` come from two sources.
-Eight entries were extracted from records in the
-[SparseCI-24 dataset](../SparseCI-24/). The fluorine entry is the
-14-configuration truncated SCI wavefunction with the accompanying xyz geometry.
+The eight wavefunctions in `data/input_wavefunctions.json` were extracted from
+records in the [SparseCI-24 dataset](../SparseCI-24/).
+
+The neutral-singlet fluorine wavefunction is generated from
+`data/structures/f2.xyz` with def2-SVP RHF, a QDK-selected CAS(10e,8o), and
+14-determinant MACIS CASCI/PMC. Run `python estimate_f2.py --generate-only` to
+rewrite `data/f2.json` and regenerate the benchmark outputs. More molecular,
+orbital, energy, and determinant details can be found in `data/f2.json`.
 
 The random benchmark uses a fixed seed of 42. It constructs a half-filled
 system with the number of configurations equal to the number of qubits and
@@ -64,9 +68,11 @@ SparseStatePrep2026/
 ├── estimate_f2.py                    # Run detailed benchmark for F2 molecule
 ├── estimate_random_matrix.py         # Run random and molecular benchmarks
 ├── generate_random_matrix.py         # Generate random determinant matrices
+├── requirements-lock.txt             # Exact resource-estimation environment
 ├── state_preparation_methods.py      # Resource estimators for four methods
 ├── data/
-│   ├── input_wavefunctions.json      # Nine molecular wavefunctions
+│   ├── f2.json                       # F2 molecular record and wavefunction
+│   ├── input_wavefunctions.json      # Eight SparseCI-24 wavefunctions
 │   └── structures/
 │       └── f2.xyz                    # F2 molecular geometry
 └── output/

@@ -1,9 +1,9 @@
 """Benchmark different sparse state preparation methods on F2 molecule.
 
-Loads the full F2 wavefunction from ``data/input_wavefunctions.json``, creates
-subsets (num_dets = 2, 3, ..., N), runs resource estimation for four
-state preparation methods(``gf2x``, ``gf2x_binary_encoding``,
-``Rupprecht2026``,``Ramacciotti2024``), and produces:
+Loads the full F2 wavefunction from ``data/f2.json``, creates subsets
+(``num_dets = 2, 3, ..., N``), runs resource estimation for four state
+preparation methods (``gf2x``, ``gf2x_binary_encoding``, ``Rupprecht2026``,
+``Ramacciotti2024``), and produces:
 
   - ``f2_matrix_results.json`` — raw resource-estimate results.
   - ``f2_matrix_results.png`` — line plots of logical qubits, non-Clifford
@@ -14,7 +14,7 @@ state preparation methods(``gf2x``, ``gf2x_binary_encoding``,
 
 # --------------------------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT License. See LICENSE in the project root for license information.
+# Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
 
 import argparse
@@ -25,13 +25,111 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
+from qdk_chemistry.algorithms import create
+from qdk_chemistry.data import Structure
 from state_preparation_methods import (
     BenchmarkResult,
     Ramacciotti2024,
     Rupprecht2026,
+    benchmark_environment,
     gf2x,
     gf2x_binary_encoding,
 )
+
+
+def generate_f2_wavefunction(
+    xyz_path: Path,
+    basis: str = "def2-svp",
+    active_alpha: int = 5,
+    active_beta: int = 5,
+    active_orbitals: int = 8,
+    num_determinants: int = 14,
+) -> dict[str, Any]:
+    """Generate the neutral-F2 CAS(10e,8o) record from an XYZ geometry."""
+    structure = Structure.from_xyz_file(xyz_path)
+    hf_energy, hf_wavefunction = create("scf_solver").run(
+        structure,
+        charge=0,
+        spin_multiplicity=1,
+        basis_or_guess=basis,
+    )
+
+    selector = create("active_space_selector", "qdk_valence")
+    selector.settings().set("num_active_electrons", active_alpha + active_beta)
+    selector.settings().set("num_active_orbitals", active_orbitals)
+    active_wavefunction = selector.run(hf_wavefunction)
+    orbitals = active_wavefunction.get_orbitals()
+    hamiltonian = create("hamiltonian_constructor", "qdk").run(orbitals)
+
+    casci_energy, casci_wavefunction = create(
+        "multi_configuration_calculator", "macis_cas"
+    ).run(hamiltonian, active_alpha, active_beta)
+    top_determinants = casci_wavefunction.get_top_determinants(num_determinants)
+    projected_energy, projected_wavefunction = create(
+        "projected_multi_configuration_calculator", "macis_pmc"
+    ).run(hamiltonian, list(top_determinants))
+
+    determinants = projected_wavefunction.get_active_determinants()
+    coefficients = [
+        complex(value) for value in projected_wavefunction.get_coefficients()
+    ]
+    max_imaginary = max((abs(value.imag) for value in coefficients), default=0.0)
+    if max_imaginary > 1e-10:
+        raise ValueError(
+            "F2 generation produced complex coefficients "
+            f"(max |imag| = {max_imaginary:.2e})."
+        )
+    real_coefficients = [value.real for value in coefficients]
+    total_orbitals = len(hf_wavefunction.get_orbitals().get_energies_alpha())
+    inactive_orbitals = int(
+        (structure.get_total_nuclear_charge() - active_alpha - active_beta) // 2
+    )
+
+    return {
+        "structure": {
+            "num_atoms": structure.get_num_atoms(),
+            "composition": "F2",
+            "total_mass_amu": structure.get_total_mass(),
+            "nuclear_repulsion_energy_eh": (
+                structure.calculate_nuclear_repulsion_energy()
+            ),
+        },
+        "scf_energy_hartree": hf_energy,
+        "orbitals_summary": {
+            "aos": orbitals.get_num_atomic_orbitals(),
+            "mos": total_orbitals,
+            "active_orbitals": {
+                "alpha": active_orbitals,
+                "beta": active_orbitals,
+            },
+            "inactive_orbitals": {
+                "alpha": inactive_orbitals,
+                "beta": inactive_orbitals,
+            },
+        },
+        "casci_energies_hartree": [casci_energy],
+        "initial_casci_energy_hartree": casci_energy,
+        "hamiltonian_summaries": [
+            {
+                "active_orbitals": active_orbitals,
+                "total_orbitals": total_orbitals,
+                "core_energy": hamiltonian.get_core_energy(),
+            }
+        ],
+        "sparse_ci_finder": {
+            "n_dets": len(determinants),
+            "energy_hartree": projected_energy,
+            "delta_e_mhartree": 1000 * (projected_energy - casci_energy),
+            "determinants": [
+                {"det": str(determinant), "coeff": coefficient}
+                for determinant, coefficient in zip(
+                    determinants, real_coefficients, strict=True
+                )
+            ],
+        },
+        "name": "F2",
+        "xyz": xyz_path.read_text(),
+    }
 
 
 @dataclass
@@ -103,22 +201,35 @@ def scan_wfns(
     return results
 
 
-def _partition_wfn(entry: dict[str, Any]) -> list[Wavefunction]:
+def _wavefunction_from_f2_record(record: dict[str, Any]) -> Wavefunction:
+    """Convert a SparseCI-style F2 record to the benchmark representation."""
+    determinants = record["sparse_ci_finder"]["determinants"]
+    bitstrings = []
+    coefficients = []
+    for entry in determinants:
+        occupation = entry["det"]
+        alpha = "".join("1" if state in {"u", "2"} else "0" for state in occupation)
+        beta = "".join("1" if state in {"d", "2"} else "0" for state in occupation)
+        bitstrings.append(beta[::-1] + alpha[::-1])
+        coefficients.append(entry["coeff"])
+    return Wavefunction(bitstrings=bitstrings, coeffs=coefficients)
+
+
+def _partition_wfn(wavefunction: Wavefunction) -> list[Wavefunction]:
     """Partition a wavefunction into prefix subsets of increasing configuration count.
 
     Starting from 2 configurations up to the full set, each subset uses the
     first ``n`` bitstrings and their re-normalised coefficients.
 
     Args:
-        entry: Dict with keys ``"bitstrings"`` (list of bitstring strs) and
-            ``"coeffs"`` (list of floats).
+        wavefunction: Full F2 wavefunction.
 
     Returns:
         List of :class:`Wavefunction` objects, one per prefix size from 2 to
         ``len(entry["bitstrings"])`` inclusive.
     """
-    bitstrings = entry["bitstrings"]
-    coeffs = entry["coeffs"]
+    bitstrings = wavefunction.bitstrings
+    coeffs = wavefunction.coeffs
     n_total = len(bitstrings)
     partitions: list[Wavefunction] = []
     for n in range(2, n_total + 1):
@@ -130,29 +241,26 @@ def _partition_wfn(entry: dict[str, Any]) -> list[Wavefunction]:
     return partitions
 
 
-def run_molecule_benchmark(
-    wfn_filepath: Path, molecule: str
-) -> dict[str, list[BenchmarkResult]]:
-    """Load a molecule's wavefunction from JSON and return resource counts.
+def run_f2_benchmark(f2_filepath: Path) -> dict[str, list[BenchmarkResult]]:
+    """Load the F2 wavefunction from JSON and return resource counts.
 
     Args:
-        wfn_filepath: Path to the JSON file containing per-molecule wavefunction
-            data (e.g. ``data/input_wavefunctions.json``).
-        molecule: Key identifying the molecule entry in the JSON file
-            (e.g. ``"F2"``).
+        f2_filepath: SparseCI-style JSON file containing the F2 record.
 
     Returns:
         Resource-count results as returned by :func:`scan_wfns`.
 
     Raises:
-        KeyError: If ``molecule`` is not present in the JSON file.
+        KeyError: If an F2 record is not present.
     """
-    with open(wfn_filepath, "r") as f:
-        all_wfns = json.load(f)
-    if molecule not in all_wfns:
-        raise KeyError(f"Molecule {molecule!r} not found in {wfn_filepath}")
-    wfns = _partition_wfn(all_wfns[molecule])
-    return scan_wfns(wfns, molecule)
+    with open(f2_filepath, "r") as f:
+        records = json.load(f)
+    try:
+        record = next(entry for entry in records if entry["name"] == "F2")
+    except StopIteration as exc:
+        raise KeyError(f"F2 not found in {f2_filepath}") from exc
+    wavefunctions = _partition_wfn(_wavefunction_from_f2_record(record))
+    return scan_wfns(wavefunctions, "F2")
 
 
 # Plotting helpers
@@ -391,16 +499,21 @@ def main() -> None:
         )
     )
     parser.add_argument(
-        "--wfn_path",
-        default=Path(__file__).parent / "data" / "input_wavefunctions.json",
+        "--f2-data",
+        default=Path(__file__).parent / "data" / "f2.json",
         type=Path,
-        help="Path to the wavefunction JSON file (e.g. data/input_wavefunctions.json).",
+        help="Path to the F2 molecular record. Default: %(default)s",
     )
     parser.add_argument(
-        "--molecule",
-        type=str,
-        default="F2",
-        help="Molecule key in the JSON file (e.g. F2).",
+        "--xyz",
+        default=Path(__file__).parent / "data" / "structures" / "f2.xyz",
+        type=Path,
+        help="F2 geometry used with --generate-only. Default: %(default)s",
+    )
+    parser.add_argument(
+        "--generate-only",
+        action="store_true",
+        help="Regenerate the F2 molecular record without running resource estimates.",
     )
     parser.add_argument(
         "--output-dir",
@@ -411,21 +524,36 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    name = args.molecule.lower()
+    if args.generate_only:
+        args.f2_data.parent.mkdir(parents=True, exist_ok=True)
+        args.f2_data.write_text(
+            json.dumps([generate_f2_wavefunction(args.xyz)], indent=2) + "\n"
+        )
+        return
+
+    name = "f2"
     output_dir: Path = args.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
     figures_dir = output_dir / "figures"
     figures_dir.mkdir(parents=True, exist_ok=True)
 
-    results = run_molecule_benchmark(args.wfn_path, molecule=args.molecule)
+    results = run_f2_benchmark(args.f2_data)
 
     json_path = output_dir / f"{name}_matrix_results.json"
     serializable = {
         method: [asdict(entry) for entry in entries]
         for method, entries in results.items()
     }
+    payload = {
+        "metadata": {
+            "molecule": "F2",
+            "input": str(args.f2_data),
+            "environment": benchmark_environment(),
+        },
+        "data": serializable,
+    }
     with open(json_path, "w") as f:
-        json.dump(serializable, f, indent=4)
+        json.dump(payload, f, indent=4)
         f.write("\n")
 
     plot_performance_lines(results, name, fig_dir=figures_dir)
@@ -436,6 +564,6 @@ if __name__ == "__main__":
     """The main entry point for the molecule benchmark script.
 
     The command-line to reproduce the F2 benchmark is:
-    `python estimate_f2.py data/input_wavefunctions.json F2`.
+    `python estimate_f2.py`.
     """
     main()
