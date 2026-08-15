@@ -6,7 +6,8 @@ This project uses GitHub Issues to track bugs and feature requests. Please searc
 issues before filing new issues to avoid duplicates. For new issues, file your bug or
 feature request as a new [Issue](https://github.com/microsoft/qdk-chemistry-data/issues).
 
-For help and questions about using this project, please visit our [GitHub Discussions](https://github.com/microsoft/qdk-chemistry-data/discussions) forum.
+For help and questions about using this project, open a new
+[GitHub issue](https://github.com/microsoft/qdk-chemistry-data/issues/new/choose).
 
 ## Microsoft Support Policy
 

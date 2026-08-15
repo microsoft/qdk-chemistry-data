@@ -1,5 +1,6 @@
-# QDK/Chemistry-Data 
-*Simulation Data generated via the Microsoft Quantum Development Kit for Chemistry (QDK/Chemistry)*
+# QDK/Chemistry-Data
+
+Simulation Data generated via the Microsoft Quantum Development Kit for Chemistry (QDK/Chemistry)
 
 QDK/Chemistry Data is an open-source data repository within the [Microsoft Quantum Development Kit (QDK)](https://github.com/microsoft/qdk).
 It provides curated quantum chemistry simulation data, molecular benchmarks, and reference datasets for use with [QDK/Chemistry](https://github.com/microsoft/qdk-chemistry).
@@ -43,7 +44,7 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 
 Copyright (c) Microsoft Corporation. All rights reserved.
 
-Licensed under the [MIT](LICENSE.txt) license.
+Licensed under the [MIT](LICENSE) license.
 
 ## Trademarks
 

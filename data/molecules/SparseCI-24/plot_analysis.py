@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Generate visualization of sparse CI wavefunction analysis results.
+"""Generate visualization of sparse CI wavefunction analysis results.
 
 Creates a scatter plot showing:
 - X-axis: Number of determinants
@@ -9,12 +8,19 @@ Creates a scatter plot showing:
 
 All metrics are derived directly from SparseCI-24.json.
 
-Usage:
+Usage::
+
     python plot_analysis.py
 
-Requirements:
+Requirements::
+
     pip install matplotlib numpy pandas
 """
+
+# --------------------------------------------------------------------------------------------
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License. See LICENSE in the project root for license information.
+# --------------------------------------------------------------------------------------------
 
 import json
 from pathlib import Path
