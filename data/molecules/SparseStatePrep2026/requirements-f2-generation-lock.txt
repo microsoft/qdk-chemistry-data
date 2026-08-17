@@ -1,4 +1,0 @@
-# F2 wavefunction-generation environment for data/f2.json.
-qdk-chemistry @ git+https://github.com/microsoft/qdk-chemistry.git@aab310b108342456bf6b1017d01ccb8e31d2d52d#subdirectory=python
-scipy==1.18.0
-pyscf==2.12.0

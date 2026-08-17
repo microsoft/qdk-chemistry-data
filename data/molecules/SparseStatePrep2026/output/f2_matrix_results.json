@@ -7,7 +7,7 @@
             "platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
             "qdk-chemistry": {
                 "version": "2.0.0+local",
-                "revision": "39ea175d191324e700a775caa9b933fe93d885d8"
+                "revision": "11aff95028af879e9007f733ef1d89a7dad95d5a"
             },
             "qdk": "1.30.0",
             "qsharp": "1.30.0",
@@ -164,8 +164,8 @@
                 "dense": {
                     "logical_qubits": 3,
                     "toffoli_count": 0,
-                    "rotation_count": 14,
-                    "non_clifford_count": 14,
+                    "rotation_count": 10,
+                    "non_clifford_count": 10,
                     "clifford_count": 28
                 },
                 "source": "chemical",
@@ -180,13 +180,13 @@
                     "toffoli_count": 9,
                     "rotation_count": 0,
                     "non_clifford_count": 9,
-                    "clifford_count": 74
+                    "clifford_count": 71
                 },
                 "dense": {
                     "logical_qubits": 4,
                     "toffoli_count": 0,
-                    "rotation_count": 30,
-                    "non_clifford_count": 30,
+                    "rotation_count": 22,
+                    "non_clifford_count": 22,
                     "clifford_count": 60
                 },
                 "source": "chemical",
@@ -201,13 +201,13 @@
                     "toffoli_count": 10,
                     "rotation_count": 0,
                     "non_clifford_count": 10,
-                    "clifford_count": 82
+                    "clifford_count": 77
                 },
                 "dense": {
                     "logical_qubits": 4,
                     "toffoli_count": 0,
-                    "rotation_count": 24,
-                    "non_clifford_count": 24,
+                    "rotation_count": 22,
+                    "non_clifford_count": 22,
                     "clifford_count": 60
                 },
                 "source": "chemical",
@@ -219,16 +219,16 @@
                 "num_dets": 11,
                 "sparse": {
                     "logical_qubits": 21,
-                    "toffoli_count": 11,
+                    "toffoli_count": 9,
                     "rotation_count": 0,
-                    "non_clifford_count": 11,
-                    "clifford_count": 91
+                    "non_clifford_count": 9,
+                    "clifford_count": 83
                 },
                 "dense": {
                     "logical_qubits": 4,
                     "toffoli_count": 0,
-                    "rotation_count": 24,
-                    "non_clifford_count": 24,
+                    "rotation_count": 22,
+                    "non_clifford_count": 22,
                     "clifford_count": 60
                 },
                 "source": "chemical",
@@ -240,10 +240,10 @@
                 "num_dets": 12,
                 "sparse": {
                     "logical_qubits": 21,
-                    "toffoli_count": 12,
+                    "toffoli_count": 10,
                     "rotation_count": 0,
-                    "non_clifford_count": 12,
-                    "clifford_count": 97
+                    "non_clifford_count": 10,
+                    "clifford_count": 91
                 },
                 "dense": {
                     "logical_qubits": 4,
@@ -261,16 +261,16 @@
                 "num_dets": 13,
                 "sparse": {
                     "logical_qubits": 21,
-                    "toffoli_count": 14,
+                    "toffoli_count": 12,
                     "rotation_count": 0,
-                    "non_clifford_count": 14,
-                    "clifford_count": 107
+                    "non_clifford_count": 12,
+                    "clifford_count": 98
                 },
                 "dense": {
                     "logical_qubits": 4,
                     "toffoli_count": 0,
-                    "rotation_count": 30,
-                    "non_clifford_count": 30,
+                    "rotation_count": 24,
+                    "non_clifford_count": 24,
                     "clifford_count": 60
                 },
                 "source": "chemical",
@@ -282,10 +282,10 @@
                 "num_dets": 14,
                 "sparse": {
                     "logical_qubits": 21,
-                    "toffoli_count": 17,
+                    "toffoli_count": 14,
                     "rotation_count": 0,
-                    "non_clifford_count": 17,
-                    "clifford_count": 111
+                    "non_clifford_count": 14,
+                    "clifford_count": 106
                 },
                 "dense": {
                     "logical_qubits": 4,
@@ -434,13 +434,13 @@
                     "toffoli_count": 360,
                     "rotation_count": 0,
                     "non_clifford_count": 360,
-                    "clifford_count": 1648
+                    "clifford_count": 1644
                 },
                 "dense": {
                     "logical_qubits": 3,
                     "toffoli_count": 0,
-                    "rotation_count": 14,
-                    "non_clifford_count": 14,
+                    "rotation_count": 10,
+                    "non_clifford_count": 10,
                     "clifford_count": 28
                 },
                 "source": "chemical",
@@ -455,13 +455,13 @@
                     "toffoli_count": 405,
                     "rotation_count": 0,
                     "non_clifford_count": 405,
-                    "clifford_count": 1858
+                    "clifford_count": 1854
                 },
                 "dense": {
                     "logical_qubits": 4,
                     "toffoli_count": 0,
-                    "rotation_count": 30,
-                    "non_clifford_count": 30,
+                    "rotation_count": 22,
+                    "non_clifford_count": 22,
                     "clifford_count": 60
                 },
                 "source": "chemical",
@@ -476,13 +476,13 @@
                     "toffoli_count": 450,
                     "rotation_count": 0,
                     "non_clifford_count": 450,
-                    "clifford_count": 2062
+                    "clifford_count": 2054
                 },
                 "dense": {
                     "logical_qubits": 4,
                     "toffoli_count": 0,
-                    "rotation_count": 24,
-                    "non_clifford_count": 24,
+                    "rotation_count": 22,
+                    "non_clifford_count": 22,
                     "clifford_count": 60
                 },
                 "source": "chemical",
@@ -497,13 +497,13 @@
                     "toffoli_count": 495,
                     "rotation_count": 0,
                     "non_clifford_count": 495,
-                    "clifford_count": 2262
+                    "clifford_count": 2258
                 },
                 "dense": {
                     "logical_qubits": 4,
                     "toffoli_count": 0,
-                    "rotation_count": 24,
-                    "non_clifford_count": 24,
+                    "rotation_count": 22,
+                    "non_clifford_count": 22,
                     "clifford_count": 60
                 },
                 "source": "chemical",
@@ -518,7 +518,7 @@
                     "toffoli_count": 540,
                     "rotation_count": 0,
                     "non_clifford_count": 540,
-                    "clifford_count": 2456
+                    "clifford_count": 2452
                 },
                 "dense": {
                     "logical_qubits": 4,
@@ -539,13 +539,13 @@
                     "toffoli_count": 585,
                     "rotation_count": 0,
                     "non_clifford_count": 585,
-                    "clifford_count": 2660
+                    "clifford_count": 2656
                 },
                 "dense": {
                     "logical_qubits": 4,
                     "toffoli_count": 0,
-                    "rotation_count": 30,
-                    "non_clifford_count": 30,
+                    "rotation_count": 24,
+                    "non_clifford_count": 24,
                     "clifford_count": 60
                 },
                 "source": "chemical",
@@ -709,13 +709,13 @@
                     "toffoli_count": 0,
                     "rotation_count": 0,
                     "non_clifford_count": 0,
-                    "clifford_count": 32
+                    "clifford_count": 34
                 },
                 "dense": {
                     "logical_qubits": 16,
                     "toffoli_count": 0,
-                    "rotation_count": 110,
-                    "non_clifford_count": 110,
+                    "rotation_count": 78,
+                    "non_clifford_count": 78,
                     "clifford_count": 252
                 },
                 "source": "chemical",
@@ -735,9 +735,9 @@
                 "dense": {
                     "logical_qubits": 16,
                     "toffoli_count": 0,
-                    "rotation_count": 222,
-                    "non_clifford_count": 222,
-                    "clifford_count": 508
+                    "rotation_count": 78,
+                    "non_clifford_count": 78,
+                    "clifford_count": 252
                 },
                 "source": "chemical",
                 "molecule": "F2"
@@ -751,13 +751,13 @@
                     "toffoli_count": 0,
                     "rotation_count": 0,
                     "non_clifford_count": 0,
-                    "clifford_count": 34
+                    "clifford_count": 38
                 },
                 "dense": {
                     "logical_qubits": 16,
                     "toffoli_count": 0,
-                    "rotation_count": 174,
-                    "non_clifford_count": 174,
+                    "rotation_count": 158,
+                    "non_clifford_count": 158,
                     "clifford_count": 508
                 },
                 "source": "chemical",
@@ -772,13 +772,13 @@
                     "toffoli_count": 0,
                     "rotation_count": 0,
                     "non_clifford_count": 0,
-                    "clifford_count": 34
+                    "clifford_count": 30
                 },
                 "dense": {
                     "logical_qubits": 16,
                     "toffoli_count": 0,
-                    "rotation_count": 174,
-                    "non_clifford_count": 174,
+                    "rotation_count": 158,
+                    "non_clifford_count": 158,
                     "clifford_count": 508
                 },
                 "source": "chemical",
@@ -793,13 +793,13 @@
                     "toffoli_count": 0,
                     "rotation_count": 0,
                     "non_clifford_count": 0,
-                    "clifford_count": 34
+                    "clifford_count": 30
                 },
                 "dense": {
                     "logical_qubits": 16,
                     "toffoli_count": 0,
-                    "rotation_count": 222,
-                    "non_clifford_count": 222,
+                    "rotation_count": 254,
+                    "non_clifford_count": 254,
                     "clifford_count": 508
                 },
                 "source": "chemical",
@@ -814,13 +814,13 @@
                     "toffoli_count": 0,
                     "rotation_count": 0,
                     "non_clifford_count": 0,
-                    "clifford_count": 34
+                    "clifford_count": 30
                 },
                 "dense": {
                     "logical_qubits": 16,
                     "toffoli_count": 0,
-                    "rotation_count": 222,
-                    "non_clifford_count": 222,
+                    "rotation_count": 110,
+                    "non_clifford_count": 110,
                     "clifford_count": 508
                 },
                 "source": "chemical",
@@ -835,13 +835,13 @@
                     "toffoli_count": 0,
                     "rotation_count": 0,
                     "non_clifford_count": 0,
-                    "clifford_count": 34
+                    "clifford_count": 30
                 },
                 "dense": {
                     "logical_qubits": 16,
                     "toffoli_count": 0,
-                    "rotation_count": 222,
-                    "non_clifford_count": 222,
+                    "rotation_count": 110,
+                    "non_clifford_count": 110,
                     "clifford_count": 508
                 },
                 "source": "chemical",
@@ -984,13 +984,13 @@
                     "toffoli_count": 5,
                     "rotation_count": 0,
                     "non_clifford_count": 5,
-                    "clifford_count": 54
+                    "clifford_count": 57
                 },
                 "dense": {
                     "logical_qubits": 16,
                     "toffoli_count": 0,
-                    "rotation_count": 14,
-                    "non_clifford_count": 14,
+                    "rotation_count": 10,
+                    "non_clifford_count": 10,
                     "clifford_count": 28
                 },
                 "source": "chemical",
@@ -1002,16 +1002,16 @@
                 "num_dets": 9,
                 "sparse": {
                     "logical_qubits": 16,
-                    "toffoli_count": 3,
+                    "toffoli_count": 5,
                     "rotation_count": 0,
-                    "non_clifford_count": 3,
-                    "clifford_count": 46
+                    "non_clifford_count": 5,
+                    "clifford_count": 55
                 },
                 "dense": {
                     "logical_qubits": 16,
                     "toffoli_count": 0,
-                    "rotation_count": 30,
-                    "non_clifford_count": 30,
+                    "rotation_count": 22,
+                    "non_clifford_count": 22,
                     "clifford_count": 60
                 },
                 "source": "chemical",
@@ -1026,13 +1026,13 @@
                     "toffoli_count": 9,
                     "rotation_count": 0,
                     "non_clifford_count": 9,
-                    "clifford_count": 76
+                    "clifford_count": 82
                 },
                 "dense": {
                     "logical_qubits": 16,
                     "toffoli_count": 0,
-                    "rotation_count": 24,
-                    "non_clifford_count": 24,
+                    "rotation_count": 22,
+                    "non_clifford_count": 22,
                     "clifford_count": 60
                 },
                 "source": "chemical",
@@ -1047,13 +1047,13 @@
                     "toffoli_count": 9,
                     "rotation_count": 0,
                     "non_clifford_count": 9,
-                    "clifford_count": 80
+                    "clifford_count": 84
                 },
                 "dense": {
                     "logical_qubits": 16,
                     "toffoli_count": 0,
-                    "rotation_count": 24,
-                    "non_clifford_count": 24,
+                    "rotation_count": 22,
+                    "non_clifford_count": 22,
                     "clifford_count": 60
                 },
                 "source": "chemical",
@@ -1068,7 +1068,7 @@
                     "toffoli_count": 12,
                     "rotation_count": 0,
                     "non_clifford_count": 12,
-                    "clifford_count": 98
+                    "clifford_count": 103
                 },
                 "dense": {
                     "logical_qubits": 16,
@@ -1089,13 +1089,13 @@
                     "toffoli_count": 12,
                     "rotation_count": 0,
                     "non_clifford_count": 12,
-                    "clifford_count": 100
+                    "clifford_count": 104
                 },
                 "dense": {
                     "logical_qubits": 16,
                     "toffoli_count": 0,
-                    "rotation_count": 30,
-                    "non_clifford_count": 30,
+                    "rotation_count": 24,
+                    "non_clifford_count": 24,
                     "clifford_count": 60
                 },
                 "source": "chemical",
@@ -1110,7 +1110,7 @@
                     "toffoli_count": 15,
                     "rotation_count": 0,
                     "non_clifford_count": 15,
-                    "clifford_count": 111
+                    "clifford_count": 116
                 },
                 "dense": {
                     "logical_qubits": 16,

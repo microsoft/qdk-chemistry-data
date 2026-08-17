@@ -1,5 +1,5 @@
-# Resource-estimation environment for the committed JSON and figures.
-qdk-chemistry[qiskit-extras] @ git+https://github.com/microsoft/qdk-chemistry.git@39ea175d191324e700a775caa9b933fe93d885d8#subdirectory=python
+# Environment for wavefunction generation and resource estimation.
+qdk-chemistry[qiskit-extras] @ git+https://github.com/microsoft/qdk-chemistry.git@11aff95028af879e9007f733ef1d89a7dad95d5a#subdirectory=python
 qdk==1.30.0
 qsharp==1.30.0
 qualtran==0.7.0

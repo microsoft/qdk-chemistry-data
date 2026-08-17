@@ -42,10 +42,6 @@ try:
         StateVectorContainer,
         Wavefunction,
     )
-    from qdk_chemistry.utils.qsharp import (
-        create_qsharp_context,
-        use_qsharp_context,
-    )
 
 except ImportError:
     raise ImportError("ERROR: qdk_chemistry is required. See README.md.")
@@ -92,7 +88,7 @@ _BASIS_GATES = [
 ]
 _CLIFFORD_GATES = {"x", "y", "z", "cx", "cz", "h", "s", "sdg", "swap"}
 _TOFFOLI_GATES = {"ccx", "ccz", "cswap"}
-_QDK_CHEMISTRY_REVISION = "39ea175d191324e700a775caa9b933fe93d885d8"
+_QDK_CHEMISTRY_REVISION = "11aff95028af879e9007f733ef1d89a7dad95d5a"
 _SPARSE_REFERENCE_SOURCE_SHA256 = (
     "4aa9ccdf5a4ae25f389e93dc8c9d7cada71f404f6a64d243038f374da81f6456"
 )
@@ -120,13 +116,6 @@ def benchmark_environment() -> dict[str, Any]:
         },
     }
 
-
-@cache
-def _adaptive_qsharp_context() -> Any:
-    """Create the shared Adaptive Q# context for measured uncomputation."""
-    return create_qsharp_context(target_profile=TargetProfile.Adaptive_RIF)
-
-
 @dataclass
 class ResourceEstimateData:
     """Resource estimate for a state preparation circuit or bloq.
@@ -146,12 +135,44 @@ class ResourceEstimateData:
     clifford_count: int
 
 
-def _to_qdk_wavefunction(bitstrings: list[str], coeffs: list[complex]) -> Wavefunction:
-    """Convert MSB-first bitstrings and coefficients to a QDK ``Wavefunction``.
+@dataclass
+class BenchmarkResult:
+    """Resource estimates for one method on one wavefunction/system.
 
-    QDK configuration strings list ``q[0]`` first, so reverse the benchmark's
-    MSB-first strings at this boundary.
+    Shared result type used by both the F2 and random-matrix benchmarks.
+
+    Args:
+        method: Method name (``"gf2x"``, ``"gf2x_binary_encoding"``,
+            ``"Rupprecht2026"``, ``"Ramacciotti2024"``).
+        num_qubits: Number of qubits (bitstring length).
+        num_dets: Number of configurations (non-zero amplitudes).
+        sparse: Resource estimate for the sparse isometry circuit.
+        dense: Resource estimate for the dense state preparation circuit.
+        source: Data source, e.g. ``"random"`` or ``"chemical"``.
+        molecule: Molecule name when ``source == "chemical"``, else ``None``.
     """
+
+    method: str
+    num_qubits: int
+    num_dets: int
+    sparse: ResourceEstimateData
+    dense: ResourceEstimateData
+    source: str = "random"
+    molecule: str | None = None
+
+    @property
+    def combined(self) -> ResourceEstimateData:
+        """Combined sparse + dense resource estimate."""
+        return ResourceEstimateData(
+            logical_qubits=max(sparse.logical_qubits, dense.logical_qubits),
+            toffoli_count=sparse.toffoli_count + dense.toffoli_count,
+            rotation_count=sparse.rotation_count + dense.rotation_count,
+            non_clifford_count=sparse.non_clifford_count + dense.non_clifford_count,
+            clifford_count=sparse.clifford_count + dense.clifford_count,
+        )
+
+def _to_qdk_wavefunction(bitstrings: list[str], coeffs: list[complex]) -> Wavefunction:
+    """Convert MSB-first bitstrings and coefficients to a QDK ``Wavefunction``."""
     n_qubits = len(bitstrings[0])
     return Wavefunction(
         StateVectorContainer(
@@ -160,16 +181,6 @@ def _to_qdk_wavefunction(bitstrings: list[str], coeffs: list[complex]) -> Wavefu
             ModelOrbitals(n_qubits),
         )
     )
-
-
-def bitstring_from_qubit_occupations(occupations: np.ndarray) -> str:
-    """Convert ``q[0]``-first occupations to an MSB-first bitstring."""
-    return "".join(str(int(bit)) for bit in reversed(occupations))
-
-
-def bitstring_from_basis_index(index: int, n_qubits: int) -> str:
-    """Convert a computational-basis index to an MSB-first bitstring."""
-    return f"{index:0{n_qubits}b}"
 
 
 def estimate_bloq(bloq: Any) -> ResourceEstimateData:
@@ -266,42 +277,17 @@ def dense_state_prep(n_qubits: int, sv: np.ndarray) -> ResourceEstimateData:
 
     indices = np.flatnonzero(sv)
     wavefunction = _to_qdk_wavefunction(
-        [bitstring_from_basis_index(int(index), n_qubits) for index in indices],
+        [f"{int(index):0{n_qubits}b}" for index in indices],
         sv[indices].tolist(),
     )
     circuit = create("state_prep", "dense_pure_state").run(wavefunction)
     return estimate_qdk_circuit(circuit)
 
 
-def _subtract_dense_estimate(
-    combined: ResourceEstimateData, dense: ResourceEstimateData
-) -> ResourceEstimateData:
-    """Recover sparse-stage gate counts from a composed QDK estimate."""
-    residuals = [
-        combined.toffoli_count - dense.toffoli_count,
-        combined.rotation_count - dense.rotation_count,
-        combined.non_clifford_count - dense.non_clifford_count,
-        combined.clifford_count - dense.clifford_count,
-    ]
-    if min(residuals) < 0:
-        raise RuntimeError(
-            "Dense circuit counts exceed the composed sparse-isometry counts."
-        )
-    return ResourceEstimateData(
-        logical_qubits=combined.logical_qubits,
-        toffoli_count=residuals[0],
-        rotation_count=residuals[1],
-        non_clifford_count=residuals[2],
-        clifford_count=residuals[3],
-    )
-
-
 def _estimate_qdk_sparse_isometry(
     bitstrings: list[str],
     coeffs: list[complex],
-    *,
     binary_encoding: bool,
-    measurement_based_uncompute: bool,
 ) -> tuple[ResourceEstimateData, ResourceEstimateData]:
     """Estimate the public QDK sparse-isometry plugin and its dense substage."""
     wavefunction = _to_qdk_wavefunction(bitstrings, coeffs)
@@ -312,20 +298,29 @@ def _estimate_qdk_sparse_isometry(
         binary_encoding=binary_encoding,
         dense_state_prep=AlgorithmRef("state_prep", "dense_pure_state"),
         include_negative_controls=True,
-        measurement_based_uncompute=measurement_based_uncompute,
+        measurement_based_uncompute=True,
     )
-    if measurement_based_uncompute:
-        with use_qsharp_context(_adaptive_qsharp_context()):
-            circuit = state_prep.run(wavefunction)
-            combined_est = estimate_qdk_circuit(circuit)
-            dense_circuit = state_prep.create_dense(wavefunction)
-            dense_est = estimate_qdk_circuit(dense_circuit)
-    else:
-        circuit = state_prep.run(wavefunction)
-        combined_est = estimate_qdk_circuit(circuit)
-        dense_circuit = state_prep.create_dense(wavefunction)
-        dense_est = estimate_qdk_circuit(dense_circuit)
-    sparse_est = _subtract_dense_estimate(combined_est, dense_est)
+    circuit = state_prep.run(wavefunction)
+    combined_est = estimate_qdk_circuit(circuit)
+    dense_circuit = state_prep.create_dense(wavefunction)
+    dense_est = estimate_qdk_circuit(dense_circuit)
+    residuals = [
+        combined_est.toffoli_count - dense_est.toffoli_count,
+        combined_est.rotation_count - dense_est.rotation_count,
+        combined_est.non_clifford_count - dense_est.non_clifford_count,
+        combined_est.clifford_count - dense_est.clifford_count,
+    ]
+    if min(residuals) < 0:
+        raise RuntimeError(
+            "Dense circuit counts exceed the composed sparse-isometry counts."
+        )
+    sparse_est = ResourceEstimateData(
+        logical_qubits=combined_est.logical_qubits,
+        toffoli_count=residuals[0],
+        rotation_count=residuals[1],
+        non_clifford_count=residuals[2],
+        clifford_count=residuals[3],
+    )
     return sparse_est, dense_est
 
 
@@ -348,28 +343,24 @@ def gf2x(
         bitstrings,
         coeffs,
         binary_encoding=False,
-        measurement_based_uncompute=False,
     )
 
 
 def gf2x_binary_encoding(
     bitstrings: list[str],
     coeffs: list[complex],
-    measurement_based_uncompute: bool = True,
 ) -> tuple[ResourceEstimateData, ResourceEstimateData]:
     """Run GF2+X with binary encoding via qdk_chemistry.
 
     Uses the QDK sparse-isometry plugin with batched Toffoli-based binary
-    encoding. Measured uncomputation explicitly selects the Adaptive Q# profile;
-    QDK otherwise uses coherent ``Std.Intrinsic.AND`` uncomputation.
+    encoding. Measured uncomputation explicitly selects the Adaptive Q# profile
+    for optimal resource estimates.
 
     Args:
         bitstrings (list[str]): Computational-basis bitstrings representing
             the non-zero amplitudes of the target state.
         coeffs (list[complex]): Expansion coefficients corresponding to
             each bitstring.
-        measurement_based_uncompute: Use measurement and feed-forward to
-            uncompute binary-encoding ANDs. Defaults to ``True``.
 
     Returns:
         tuple[ResourceEstimate, ResourceEstimate]: A pair
@@ -379,7 +370,6 @@ def gf2x_binary_encoding(
         bitstrings,
         coeffs,
         binary_encoding=True,
-        measurement_based_uncompute=measurement_based_uncompute,
     )
 
 
@@ -438,29 +428,6 @@ def Rupprecht2026(
     return sparse_est, dense_est
 
 
-def _bitstrings_to_coefficient_map(
-    bitstrings: list[str], coeffs: list[complex]
-) -> dict[int, complex]:
-    """Convert bitstrings to a format compatible with Ramacciotti2024.
-
-    Args:
-        bitstrings (list[str]): Computational-basis bitstrings.
-        coeffs (list[complex]): Complex expansion coefficients corresponding
-            to each bitstring.
-
-    Returns:
-        dict[int, complex]: Mapping from integer computational-basis index
-            (``int(bitstring, 2)``) to its complex coefficient.
-    """
-    coef_map: dict[int, complex] = {}
-    for bs, cf in zip(bitstrings, coeffs):
-        idx = int(bs, 2)
-        if idx in coef_map:
-            raise ValueError(f"Duplicate bitstring encountered: {bs!r}")
-        coef_map[idx] = cf
-    return coef_map
-
-
 def Ramacciotti2024(
     bitstrings: list[str], coeffs: list[complex], phase_bitsize: int = PHASE_BITSIZE
 ) -> tuple[ResourceEstimateData, ResourceEstimateData]:
@@ -486,7 +453,12 @@ def Ramacciotti2024(
     """
     num_qubits = len(bitstrings[0])
 
-    coef_map = _bitstrings_to_coefficient_map(bitstrings, coeffs)
+    coef_map: dict[int, complex] = {}
+    for bs, cf in zip(bitstrings, coeffs):
+        idx = int(bs, 2)
+        if idx in coef_map:
+            raise ValueError(f"Duplicate bitstring encountered: {bs!r}")
+        coef_map[idx] = cf
 
     sparse_prep = SparseStatePreparationViaRotations.from_coefficient_map(
         N=2**num_qubits, coeff_map=coef_map, phase_bitsize=phase_bitsize
@@ -503,54 +475,3 @@ def Ramacciotti2024(
 
     return sparse_est, dense_est
 
-
-def combine_estimates(
-    sparse: ResourceEstimateData, dense: ResourceEstimateData
-) -> ResourceEstimateData:
-    """Combine sparse and dense resource estimates into a single estimate.
-
-    Args:
-        sparse: Resource estimate for the sparse isometry circuit.
-        dense: Resource estimate for the dense state preparation circuit.
-
-    Returns:
-        Merged estimate where qubit count is the max and gate counts are summed.
-    """
-    return ResourceEstimateData(
-        logical_qubits=max(sparse.logical_qubits, dense.logical_qubits),
-        toffoli_count=sparse.toffoli_count + dense.toffoli_count,
-        rotation_count=sparse.rotation_count + dense.rotation_count,
-        non_clifford_count=sparse.non_clifford_count + dense.non_clifford_count,
-        clifford_count=sparse.clifford_count + dense.clifford_count,
-    )
-
-
-@dataclass
-class BenchmarkResult:
-    """Resource estimates for one method on one wavefunction/system.
-
-    Shared result type used by both the F2 and random-matrix benchmarks.
-
-    Args:
-        method: Method name (``"gf2x"``, ``"gf2x_binary_encoding"``,
-            ``"Rupprecht2026"``, ``"Ramacciotti2024"``).
-        num_qubits: Number of qubits (bitstring length).
-        num_dets: Number of configurations (non-zero amplitudes).
-        sparse: Resource estimate for the sparse isometry circuit.
-        dense: Resource estimate for the dense state preparation circuit.
-        source: Data source, e.g. ``"random"`` or ``"chemical"``.
-        molecule: Molecule name when ``source == "chemical"``, else ``None``.
-    """
-
-    method: str
-    num_qubits: int
-    num_dets: int
-    sparse: ResourceEstimateData
-    dense: ResourceEstimateData
-    source: str = "random"
-    molecule: str | None = None
-
-    @property
-    def combined(self) -> ResourceEstimateData:
-        """Combined sparse + dense resource estimate."""
-        return combine_estimates(self.sparse, self.dense)

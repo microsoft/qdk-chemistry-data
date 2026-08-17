@@ -16,15 +16,10 @@ determinant matrices and molecular wavefunctions.
 
 ## Reproducibility
 
-Wavefunction generation and resource estimation use separate qdk-chemistry
-revisions:
-
-- `aab310b108342456bf6b1017d01ccb8e31d2d52d` generates `data/f2.json`.
-- `39ea175d191324e700a775caa9b933fe93d885d8` estimates resources with binary
-  encoding from qdk-chemistry PR 435.
-
-Use Python 3.12 in the qdk-chemistry development container. Install the
-resource-estimation environment:
+Wavefunction generation and resource estimation use qdk-chemistry revision
+`11aff95028af879e9007f733ef1d89a7dad95d5a`.
+Use Python 3.12 in the qdk-chemistry dev container. Install the exact
+environment:
 
 ```bash
 python -m pip install --requirement requirements-lock.txt
@@ -34,46 +29,25 @@ The Rupprecht and Wolk reference implementation is distributed under Apache
 License 2.0 through immutable
 [Zenodo record 18234600](https://doi.org/10.5281/zenodo.18234600).
 
-Run the full resource estimates from this directory:
+Regenerate the F2 wavefunction and run the resource estimates from this
+directory:
 
 ```bash
+python generate_f2.py
 python estimate_random_matrix.py
 python estimate_f2.py
-```
-
-Regenerate the F2 wavefunction in a separate environment:
-
-```bash
-python -m pip install --requirement requirements-lock.txt
-CMAKE_BUILD_PARALLEL_LEVEL=1 \
-  python -m pip install --no-deps --force-reinstall \
-    --requirement requirements-f2-generation-lock.txt
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
-  python generate_f2.py
 ```
 
 ## Methodology
 
 The eight wavefunctions in `data/input_wavefunctions.json` were extracted from
 records in the [SparseCI-24 dataset](../SparseCI-24/).
-
-The paper's F2 benchmark is regenerated from `data/structures/f2.xyz` with
-def2-SVP restricted HF. The historical pipeline selected a 14-electron,
-8-orbital valence space but solved the 5-alpha/5-beta MACIS sector. The script
-preserves that behavior, applies the recovered basis transformation within an
-exactly degenerate orbital pair, and resolves the determinant-cutoff tie
-lexicographically. The final determinants are ordered as in the paper because
-the resource benchmark scans prefix subsets of that ordering. The exact gauge,
-electron sectors, and energies are recorded in `data/f2.json`. The historical
-electron-sector mismatch is retained for artifact reproduction; it is not a
-consistent neutral-F2 active-space calculation.
+The paper's F2 benchmark is regenerated from `data/xyz/f2.xyz` with
+def2-SVP restricted HF in `generate_f2.py`.
 
 The random benchmark uses a fixed seed of 42. It constructs a half-filled
 system with the number of configurations equal to the number of qubits and
 samples excitations from the Hartree-Fock determinant.
-
-Benchmark bitstrings are MSB-first. Backend adapters convert them to native
-ordering, including QDK's `q[0]`-first configuration strings.
 
 The compared methods are:
 
@@ -92,13 +66,13 @@ SparseStatePrep2026/
 ├── estimate_random_matrix.py         # Run random and molecular benchmarks
 ├── generate_f2.py                    # Regenerate the paper F2 wavefunction
 ├── generate_random_matrix.py         # Generate random determinant matrices
-├── requirements-f2-generation-lock.txt # F2 wavefunction environment
-├── requirements-lock.txt             # Exact resource-estimation environment
+├── requirements-lock.txt             # Exact benchmark environment
 ├── state_preparation_methods.py      # Resource estimators for four methods
+├── cgmanifest.json                   # Third-party component declarations
 ├── data/
 │   ├── f2.json                       # F2 molecular record and wavefunction
 │   ├── input_wavefunctions.json      # Eight SparseCI-24 wavefunctions
-│   └── structures/
+│   └── xyz/
 │       └── f2.xyz                    # F2 molecular geometry
 └── output/
     ├── random_matrix_results.json    # Random and molecular benchmark results

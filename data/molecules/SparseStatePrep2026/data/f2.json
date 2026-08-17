@@ -6,7 +6,7 @@
       "total_mass_amu": 37.996,
       "nuclear_repulsion_energy_eh": 30.69064592386509
     },
-    "scf_energy_hartree": -198.50845418512333,
+    "scf_energy_hartree": -198.50845418513984,
     "orbitals_summary": {
       "aos": 28,
       "mos": 28,
@@ -19,106 +19,77 @@
         "beta": 2
       }
     },
-    "generation": {
-      "qdk_chemistry_revision": "aab310b108342456bf6b1017d01ccb8e31d2d52d",
-      "thread_environment": {
-        "OMP_NUM_THREADS": "1",
-        "OPENBLAS_NUM_THREADS": "1"
-      },
-      "selected_active_electrons": 14,
-      "cas_electrons": {
-        "alpha": 5,
-        "beta": 5
-      },
-      "determinant_tie_tolerance": 5e-07,
-      "compatibility_gauge": {
-        "indexing": "zero-based full MO columns",
-        "swap": [
-          4,
-          5
-        ],
-        "phase_flips": [
-          3,
-          6
-        ],
-        "rotation_pair": [
-          4,
-          5
-        ],
-        "rotation_degrees": 67.0846143033431
-      }
-    },
     "casci_energies_hartree": [
-      -192.75465442984597
+      -192.75465433742383
     ],
-    "initial_casci_energy_hartree": -192.75465442984597,
+    "initial_casci_energy_hartree": -192.75465433742383,
     "hamiltonian_summaries": [
       {
         "active_orbitals": 8,
         "total_orbitals": 28,
-        "core_energy": -132.32974205367697
+        "core_energy": -132.32974205277344
       }
     ],
     "sparse_ci_finder": {
       "n_dets": 14,
-      "energy_hartree": -192.58787831622922,
-      "delta_e_mhartree": 166.7761136167485,
+      "energy_hartree": -192.64780950133064,
+      "delta_e_mhartree": 106.84483609318818,
       "determinants": [
         {
           "det": "22222000",
-          "coeff": -0.6556493071159549
+          "coeff": -0.6730294615990674
         },
         {
           "det": "22202020",
-          "coeff": 0.3523690379193967
+          "coeff": 0.38670496312728747
         },
         {
           "det": "22022200",
-          "coeff": 0.33914157467144623
+          "coeff": 0.3867049631272404
         },
         {
           "det": "22002220",
-          "coeff": -0.2920977332255789
+          "coeff": -0.301158655113254
         },
         {
           "det": "22du2du0",
-          "coeff": 0.22760009343331739
+          "coeff": 0.18180623986853603
         },
         {
           "det": "22ud2ud0",
-          "coeff": 0.176317136300566
+          "coeff": 0.181806239868535
         },
         {
           "det": "22220002",
-          "coeff": 0.12233294867626916
+          "coeff": 0.18470661514904468
         },
         {
-          "det": "22du2200",
-          "coeff": -0.13259851532572609
+          "det": "22ud2du0",
+          "coeff": 0.08102789229596669
         },
         {
-          "det": "22du2020",
-          "coeff": 0.1492840341818503
+          "det": "22du2ud0",
+          "coeff": 0.081027892295964
         },
         {
-          "det": "22202ud0",
-          "coeff": -0.14023368580466616
+          "det": "2u22200d",
+          "coeff": 0.0831327577084262
         },
         {
-          "det": "22022ud0",
-          "coeff": 0.18867086785183657
+          "det": "2d22200u",
+          "coeff": 0.08313275770843302
         },
         {
-          "det": "22202du0",
-          "coeff": -0.14861721200101635
+          "det": "22200022",
+          "coeff": -0.10981424150620271
         },
         {
-          "det": "22022du0",
-          "coeff": 0.12839106736013178
+          "det": "22020202",
+          "coeff": -0.10981424150620189
         },
         {
-          "det": "22ud2200",
-          "coeff": -0.11859786816258279
+          "det": "22000222",
+          "coeff": 0.07719012321538346
         }
       ]
     },
