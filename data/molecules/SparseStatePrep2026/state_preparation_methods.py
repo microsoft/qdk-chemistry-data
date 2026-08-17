@@ -20,11 +20,13 @@ Also provides helpers shared across methods: ``estimate_bloq`` and
 
 from collections import Counter
 from dataclasses import dataclass
+from functools import cache
 from importlib.metadata import version as distribution_version
 import platform
 from typing import Any
 
 import numpy as np
+from qdk import TargetProfile
 from qiskit.circuit import QuantumCircuit
 from qiskit.circuit.controlflow import ControlFlowOp, IfElseOp
 from qiskit.compiler import transpile
@@ -39,6 +41,10 @@ try:
         ModelOrbitals,
         StateVectorContainer,
         Wavefunction,
+    )
+    from qdk_chemistry.utils.qsharp import (
+        create_qsharp_context,
+        use_qsharp_context,
     )
 
 except ImportError:
@@ -87,6 +93,13 @@ _BASIS_GATES = [
 _CLIFFORD_GATES = {"x", "y", "z", "cx", "cz", "h", "s", "sdg", "swap"}
 _TOFFOLI_GATES = {"ccx", "ccz", "cswap"}
 
+
+@cache
+def _adaptive_qsharp_context() -> Any:
+    """Q# context allowing the mid-circuit measurement that `AND` uncompute uses."""
+    return create_qsharp_context(target_profile=TargetProfile.Adaptive_RIF)
+
+
 def benchmark_environment() -> dict[str, Any]:
     """Return the resolved package versions used by the benchmark."""
     return {
@@ -106,6 +119,7 @@ def benchmark_environment() -> dict[str, Any]:
             "source": "https://doi.org/10.5281/zenodo.18234600",
         },
     }
+
 
 @dataclass
 class ResourceEstimateData:
@@ -158,9 +172,11 @@ class BenchmarkResult:
             logical_qubits=max(self.sparse.logical_qubits, self.dense.logical_qubits),
             toffoli_count=self.sparse.toffoli_count + self.dense.toffoli_count,
             rotation_count=self.sparse.rotation_count + self.dense.rotation_count,
-            non_clifford_count=self.sparse.non_clifford_count + self.dense.non_clifford_count,
+            non_clifford_count=self.sparse.non_clifford_count
+            + self.dense.non_clifford_count,
             clifford_count=self.sparse.clifford_count + self.dense.clifford_count,
         )
+
 
 def _to_qdk_wavefunction(bitstrings: list[str], coeffs: list[complex]) -> Wavefunction:
     """Convert MSB-first bitstrings and coefficients to a QDK ``Wavefunction``."""
@@ -296,10 +312,11 @@ def _estimate_qdk_sparse_isometry(
         include_negative_controls=True,
         measurement_based_uncompute=True,
     )
-    circuit = state_prep.run(wavefunction)
-    combined_est = estimate_qdk_circuit(circuit)
-    dense_circuit = state_prep.create_dense(wavefunction)
-    dense_est = estimate_qdk_circuit(dense_circuit)
+    with use_qsharp_context(_adaptive_qsharp_context()):
+        circuit = state_prep.run(wavefunction)
+        combined_est = estimate_qdk_circuit(circuit)
+        dense_circuit = state_prep.create_dense(wavefunction)
+        dense_est = estimate_qdk_circuit(dense_circuit)
     residuals = [
         combined_est.toffoli_count - dense_est.toffoli_count,
         combined_est.rotation_count - dense_est.rotation_count,
@@ -470,4 +487,3 @@ def Ramacciotti2024(
     dense_est = dense_state_prep(dense_bitsize, sv)
 
     return sparse_est, dense_est
-

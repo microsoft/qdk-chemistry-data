@@ -17,6 +17,7 @@ from qdk_chemistry.utils import compute_valence_space_parameters
 
 _F2_NUM_DETERMINANTS = 14
 
+
 def _determinant_bitstring(determinant: Any, num_orbitals: int) -> str:
     """Serialize a determinant as MSB-first beta-alpha blocks."""
     alpha, beta = determinant.to_binary_strings(num_orbitals)
