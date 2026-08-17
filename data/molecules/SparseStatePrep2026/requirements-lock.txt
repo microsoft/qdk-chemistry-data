@@ -6,5 +6,6 @@ qualtran==0.7.0
 qiskit==2.4.2
 numpy==2.3.5
 matplotlib==3.11.0
+sparse-state-preparation @ https://zenodo.org/api/records/18234600/files/Code_for_Sparse_quantum_state_preparation_with_improved_Toffoli_cost.zip/content
 maturin==1.14.1
 rsmf==0.2.1
