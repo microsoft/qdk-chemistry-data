@@ -12,7 +12,24 @@
       50,
       60
     ],
-    "num_configs_ratio": 1.0
+    "num_configs_ratio": 1.0,
+    "environment": {
+      "python": "3.12.3",
+      "platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+      "qdk-chemistry": {
+        "version": "2.0.0+local"
+      },
+      "qdk": "1.30.0",
+      "qsharp": "1.30.0",
+      "qualtran": "0.7.0",
+      "qiskit": "2.4.2",
+      "numpy": "2.3.5",
+      "matplotlib": "3.11.0",
+      "sparse-state-preparation": {
+        "version": "0.1.0",
+        "source": "https://doi.org/10.5281/zenodo.18234600"
+      }
+    }
   },
   "data": [
     {
