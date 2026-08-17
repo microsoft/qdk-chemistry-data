@@ -26,8 +26,7 @@
       "numpy": "2.3.5",
       "matplotlib": "3.11.0",
       "sparse-state-preparation": {
-        "version": "0.1.0",
-        "source": "https://doi.org/10.5281/zenodo.18234600"
+        "version": "0.1.0"
       }
     }
   },

@@ -19,7 +19,7 @@ QDK/Chemistry Data provides:
 | Dataset | Description | Molecules |
 |---------|-------------|-----------|
 | [SparseCI-24](data/molecules/SparseCI-24/) | Molecules with compact sparse CI wavefunctions (≤6 determinants, <1 mHa accuracy) | 24 |
-| [SparseStatePrep2026](data/molecules/SparseStatePrep2026/) | Sparse state preparation resource-estimation inputs, results, and figure-generation scripts |  |
+| [SparseStatePrep2026](data/molecules/SparseStatePrep2026/) | Sparse state preparation resource-estimation inputs, results, and scripts |  |
 
 ## Contributing
 

@@ -116,7 +116,6 @@ def benchmark_environment() -> dict[str, Any]:
         "matplotlib": distribution_version("matplotlib"),
         "sparse-state-preparation": {
             "version": distribution_version("sparse-state-preparation"),
-            "source": "https://doi.org/10.5281/zenodo.18234600",
         },
     }
 

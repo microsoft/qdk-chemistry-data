@@ -16,8 +16,6 @@ determinant matrices and molecular wavefunctions.
 
 ## Reproducibility
 
-Wavefunction generation and resource estimation use qdk-chemistry revision
-`11aff95028af879e9007f733ef1d89a7dad95d5a`.
 Use Python 3.12 in the qdk-chemistry dev container. Install the exact
 environment:
 
@@ -29,11 +27,9 @@ The Rupprecht and Wolk reference implementation is distributed under Apache
 License 2.0 through immutable
 [Zenodo record 18234600](https://doi.org/10.5281/zenodo.18234600).
 
-Regenerate the F2 wavefunction and run the resource estimates from this
-directory:
+Run the resource estimates from this directory:
 
 ```bash
-python generate_f2.py
 python estimate_random_matrix.py
 python estimate_f2.py
 ```
