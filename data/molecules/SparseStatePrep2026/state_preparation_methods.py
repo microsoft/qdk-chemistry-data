@@ -10,7 +10,7 @@ All four methods accept MSB-first bitstrings and coefficients:
     Ramacciotti et al. (2024) via Qualtran.
 
 Also provides helpers shared across methods: ``estimate_bloq`` and
-``estimate_qdk_circuit``, and the shared ``ResourceEstimate`` result type.
+``estimate_qdk_circuit``, and the shared ``ResourceEstimateData`` result type.
 """
 
 # --------------------------------------------------------------------------------------------
@@ -20,13 +20,11 @@ Also provides helpers shared across methods: ``estimate_bloq`` and
 
 from collections import Counter
 from dataclasses import dataclass
-from functools import cache
 from importlib.metadata import version as distribution_version
 import platform
 from typing import Any
 
 import numpy as np
-from qdk import TargetProfile
 from qiskit.circuit import QuantumCircuit
 from qiskit.circuit.controlflow import ControlFlowOp, IfElseOp
 from qiskit.compiler import transpile
@@ -88,11 +86,6 @@ _BASIS_GATES = [
 ]
 _CLIFFORD_GATES = {"x", "y", "z", "cx", "cz", "h", "s", "sdg", "swap"}
 _TOFFOLI_GATES = {"ccx", "ccz", "cswap"}
-_QDK_CHEMISTRY_REVISION = "11aff95028af879e9007f733ef1d89a7dad95d5a"
-_SPARSE_REFERENCE_SOURCE_SHA256 = (
-    "4aa9ccdf5a4ae25f389e93dc8c9d7cada71f404f6a64d243038f374da81f6456"
-)
-
 
 def benchmark_environment() -> dict[str, Any]:
     """Return the resolved package versions used by the benchmark."""
@@ -101,7 +94,6 @@ def benchmark_environment() -> dict[str, Any]:
         "platform": platform.platform(),
         "qdk-chemistry": {
             "version": distribution_version("qdk-chemistry"),
-            "revision": _QDK_CHEMISTRY_REVISION,
         },
         "qdk": distribution_version("qdk"),
         "qsharp": distribution_version("qsharp"),
@@ -112,7 +104,6 @@ def benchmark_environment() -> dict[str, Any]:
         "sparse-state-preparation": {
             "version": distribution_version("sparse-state-preparation"),
             "source": "https://doi.org/10.5281/zenodo.18234600",
-            "source_archive_sha256": _SPARSE_REFERENCE_SOURCE_SHA256,
         },
     }
 
@@ -164,11 +155,11 @@ class BenchmarkResult:
     def combined(self) -> ResourceEstimateData:
         """Combined sparse + dense resource estimate."""
         return ResourceEstimateData(
-            logical_qubits=max(sparse.logical_qubits, dense.logical_qubits),
-            toffoli_count=sparse.toffoli_count + dense.toffoli_count,
-            rotation_count=sparse.rotation_count + dense.rotation_count,
-            non_clifford_count=sparse.non_clifford_count + dense.non_clifford_count,
-            clifford_count=sparse.clifford_count + dense.clifford_count,
+            logical_qubits=max(self.sparse.logical_qubits, self.dense.logical_qubits),
+            toffoli_count=self.sparse.toffoli_count + self.dense.toffoli_count,
+            rotation_count=self.sparse.rotation_count + self.dense.rotation_count,
+            non_clifford_count=self.sparse.non_clifford_count + self.dense.non_clifford_count,
+            clifford_count=self.sparse.clifford_count + self.dense.clifford_count,
         )
 
 def _to_qdk_wavefunction(bitstrings: list[str], coeffs: list[complex]) -> Wavefunction:
@@ -181,6 +172,11 @@ def _to_qdk_wavefunction(bitstrings: list[str], coeffs: list[complex]) -> Wavefu
             ModelOrbitals(n_qubits),
         )
     )
+
+
+def bitstring_from_qubit_occupations(occupations: np.ndarray) -> str:
+    """Convert ``q[0]``-first occupations to an MSB-first bitstring."""
+    return "".join(str(int(bit)) for bit in reversed(occupations))
 
 
 def estimate_bloq(bloq: Any) -> ResourceEstimateData:
@@ -235,7 +231,7 @@ def estimate_qdk_circuit(circuit: Circuit) -> ResourceEstimateData:
         circuit (Circuit): A ``qdk_chemistry`` ``Circuit`` object.
 
     Returns:
-        ResourceEstimate: Resource estimate for the transpiled circuit.
+        ResourceEstimateData: Resource estimate for the transpiled circuit.
     """
     qc = circuit.get_qiskit_circuit()
     qc = transpile(qc, basis_gates=_BASIS_GATES, optimization_level=0)
@@ -262,7 +258,7 @@ def dense_state_prep(n_qubits: int, sv: np.ndarray) -> ResourceEstimateData:
             Will be L2-normalised before use.
 
     Returns:
-        ResourceEstimate: Resource estimate; see ``estimate_qdk_circuit``.
+        ResourceEstimateData: Resource estimate; see ``estimate_qdk_circuit``.
     """
     if np.iscomplexobj(sv):
         if np.max(np.abs(sv.imag)) > 1e-10:
@@ -336,7 +332,7 @@ def gf2x(
             each bitstring.
 
     Returns:
-        tuple[ResourceEstimate, ResourceEstimate]: A pair
+        tuple[ResourceEstimateData, ResourceEstimateData]: A pair
             ``(sparse_est, dense_est)``.
     """
     return _estimate_qdk_sparse_isometry(
@@ -363,7 +359,7 @@ def gf2x_binary_encoding(
             each bitstring.
 
     Returns:
-        tuple[ResourceEstimate, ResourceEstimate]: A pair
+        tuple[ResourceEstimateData, ResourceEstimateData]: A pair
             ``(sparse_est, dense_est)``.
     """
     return _estimate_qdk_sparse_isometry(
@@ -396,7 +392,7 @@ def Rupprecht2026(
             register.  Defaults to ``NUM_FRAC`` (6).
 
     Returns:
-        tuple[ResourceEstimate, ResourceEstimate]: A pair
+        tuple[ResourceEstimateData, ResourceEstimateData]: A pair
             ``(sparse_est, dense_est)`` where ``sparse_est`` comes from
             ``estimate_bloq`` and ``dense_est`` from ``dense_state_prep``.
     """
@@ -447,7 +443,7 @@ def Ramacciotti2024(
             ``PHASE_BITSIZE`` (6).
 
     Returns:
-        tuple[ResourceEstimate, ResourceEstimate]: A pair
+        tuple[ResourceEstimateData, ResourceEstimateData]: A pair
             ``(sparse_est, dense_est)`` where ``sparse_est`` comes from
             ``estimate_bloq`` and ``dense_est`` from ``dense_state_prep``.
     """
