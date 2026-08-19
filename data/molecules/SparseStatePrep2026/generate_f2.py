@@ -16,6 +16,8 @@ from qdk_chemistry.data import Orbitals, Structure
 from qdk_chemistry.utils import compute_valence_space_parameters
 
 _F2_NUM_DETERMINANTS = 14
+_F2_ACTIVE_ELECTRONS = 10
+_F2_ACTIVE_ORBITALS = 8
 
 
 def _determinant_bitstring(determinant: Any, num_orbitals: int) -> str:
@@ -37,23 +39,21 @@ def generate_f2_wavefunction(
         basis_or_guess=basis,
     )
 
-    selected_electrons, active_orbitals = compute_valence_space_parameters(
-        hf_wavefunction, 0
-    )
-    assert (selected_electrons, active_orbitals) == (14, 8), (
-        f"Expected 14 electrons and 8 active orbitals, "
-        f"got {(selected_electrons, active_orbitals)}"
+    assert compute_valence_space_parameters(hf_wavefunction, 0) == (14, 8), (
+        f"Expected a (14e, 8o) valence space, "
+        f"got {compute_valence_space_parameters(hf_wavefunction, 0)}"
     )
 
+    active_orbitals = _F2_ACTIVE_ORBITALS
     selector = create("active_space_selector", "qdk_valence")
-    selector.settings().set("num_active_electrons", selected_electrons)
+    selector.settings().set("num_active_electrons", _F2_ACTIVE_ELECTRONS)
     selector.settings().set("num_active_orbitals", active_orbitals)
     active_wavefunction = selector.run(hf_wavefunction)
     orbitals = active_wavefunction.get_orbitals()
     active_indices = list(orbitals.get_active_space_indices()[0])
     inactive_indices = list(orbitals.get_inactive_space_indices()[0])
-    assert active_indices == list(range(2, 10)) and inactive_indices == [0, 1], (
-        f"Expected active indices 2-9 and inactive indices [0, 1], "
+    assert active_indices == list(range(4, 12)) and inactive_indices == [0, 1, 2, 3], (
+        f"Expected active indices 4-11 and inactive indices [0, 1, 2, 3], "
         f"got {active_indices} and {inactive_indices}"
     )
 
@@ -69,10 +69,14 @@ def generate_f2_wavefunction(
     )
     hamiltonian = create("hamiltonian_constructor", "qdk").run(compatible_orbitals)
 
-    active_alpha = active_beta = 5
+    active_alpha = active_beta = _F2_ACTIVE_ELECTRONS // 2
     casci_energy, casci_wavefunction = create(
         "multi_configuration_calculator", "macis_cas"
     ).run(hamiltonian, active_alpha, active_beta)
+    assert casci_energy <= hf_energy, (
+        f"CASCI energy {casci_energy} is above the RHF energy {hf_energy}; "
+        "the active space is inconsistent with the electron count"
+    )
 
     coefficient_determinant_pairs = list(
         zip(
@@ -112,7 +116,7 @@ def generate_f2_wavefunction(
         )
         for determinant, coefficient in zip(determinants, coefficients, strict=True)
     }
-    phase = -1.0 if projected_by_bitstring[selected_order[0]][1] > 0.0 else 1.0
+    phase = 1.0 if projected_by_bitstring[selected_order[0]][1] > 0.0 else -1.0
     total_orbitals = len(hf_wavefunction.get_orbitals().get_energies_alpha())
 
     return {
