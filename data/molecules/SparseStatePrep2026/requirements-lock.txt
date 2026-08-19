@@ -1,5 +1,4 @@
-# Environment for wavefunction generation and resource estimation.
-qdk-chemistry[qiskit-extras] @ git+https://github.com/microsoft/qdk-chemistry.git@11aff95028af879e9007f733ef1d89a7dad95d5a#subdirectory=python
+qdk-chemistry[qiskit-extras] @ git+https://github.com/microsoft/qdk-chemistry.git@02c506341f065fbb8d254a248c7cf90bed3bf31b#subdirectory=python
 qdk==1.30.0
 qsharp==1.30.0
 qualtran==0.7.0
