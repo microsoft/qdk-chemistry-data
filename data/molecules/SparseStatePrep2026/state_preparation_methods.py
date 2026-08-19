@@ -47,9 +47,8 @@ try:
         use_qsharp_context,
     )
 
-except ImportError:
-    raise ImportError("ERROR: qdk_chemistry is required. See README.md.")
-
+except ImportError as exc:
+    raise ImportError("ERROR: qdk_chemistry is required. See README.md.") from exc
 try:
     from sparse_state_preparation import SparseStatePreparation
     from sparse_state_preparation.isometry import IsometryToSubspaceViaBatching
@@ -283,9 +282,9 @@ def dense_state_prep(n_qubits: int, sv: np.ndarray) -> ResourceEstimateData:
             )
         sv = sv.real.copy()
     norm = np.linalg.norm(sv)
-    if norm > 0:
-        sv = sv / norm
-
+    if norm == 0:
+        raise ValueError("Dense state preparation received a zero-norm statevector.")
+    sv = sv / norm
     indices = np.flatnonzero(sv)
     wavefunction = _to_qdk_wavefunction(
         [f"{int(index):0{n_qubits}b}" for index in indices],
@@ -422,7 +421,11 @@ def Rupprecht2026(
         uncompute_in_isometry=True,
     )
     dense_bitsize = sparse_prep.isometry.subspace_bitsize
-    dense_coeffs = sparse_prep._permuted_coefficients
+    dense_coeffs = getattr(sparse_prep, "_permuted_coefficients", None)
+    if dense_coeffs is None:
+        raise AttributeError(
+            "sparse_state_preparation API changed: missing '_permuted_coefficients'"
+        )
     # Build the dense statevector directly — the Rupprecht dense register spans
     # all 2^dense_bitsize computational basis states (arbitrary electron counts),
     # which cannot be represented as a QDKWavefunction.  Bypass it entirely.
@@ -475,7 +478,11 @@ def Ramacciotti2024(
     sparse_prep = SparseStatePreparationViaRotations.from_coefficient_map(
         N=2**num_qubits, coeff_map=coef_map, phase_bitsize=phase_bitsize
     )
-    isometry_bloq = sparse_prep._basis_permutation_bloq
+    isometry_bloq = getattr(sparse_prep, "_basis_permutation_bloq", None)
+    if isometry_bloq is None:
+        raise AttributeError(
+            "Qualtran API changed: missing '_basis_permutation_bloq' on SparseStatePreparationViaRotations"
+        )
     sparse_est = estimate_bloq(isometry_bloq)
 
     dense_bitsize = sparse_prep.dense_bitsize

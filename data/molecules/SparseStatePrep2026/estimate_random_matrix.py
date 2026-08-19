@@ -74,8 +74,8 @@ def _save_checkpoint(
             json.dump(results, f, indent=2, default=str)
             f.write("\n")
         temp_path.replace(json_path)
-    except Exception:
-        Logger.warn("Failed to save checkpoint")
+    except Exception as exc:
+        Logger.warn(f"Failed to save checkpoint to {json_path}: {exc}")
 
 
 def _estimate_method(
