@@ -22,9 +22,10 @@ import argparse
 import json
 import math
 from collections.abc import Callable
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from math import comb
 from pathlib import Path
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,30 +43,42 @@ from state_preparation_methods import (
 )
 
 
+@dataclass
+class MethodOutcome:
+    """Outcome of running one method on one system.
+
+    Args:
+        status: ``"ok"`` when estimates were produced, ``"skipped"`` when the
+            method was deliberately not run, ``"failed"`` when it raised.
+        estimates: ``(sparse, dense)`` estimates when ``status == "ok"``.
+        reason: Why no estimate was produced, or ``None`` when ``status`` is
+            ``"ok"``.
+    """
+
+    status: str
+    estimates: tuple[ResourceEstimateData, ResourceEstimateData] | None = None
+    reason: str | None = None
+
+
 def _save_checkpoint(
     data: list[BenchmarkResult],
+    missing: list[dict[str, Any]],
     output_dir: Path,
-    seed: int,
-    qubits_list: list[int],
-    num_configs_ratio: float,
+    metadata: dict[str, Any],
 ) -> None:
     """Save current results to JSON atomically.
 
     Args:
         data: List of :class:`BenchmarkResult` accumulated so far.
+        missing: One record per (method, system) pair that produced no
+            estimate, each carrying its ``status`` and ``reason``.
         output_dir: Directory to write ``random_matrix_results.json`` into.
-        seed: RNG seed recorded in the metadata.
-        qubits_list: Qubit grid recorded in the metadata.
-        num_configs_ratio: Configs-per-qubit ratio recorded in the metadata.
+        metadata: Run configuration recorded alongside the results.
     """
     results = {
-        "metadata": {
-            "seed": seed,
-            "qubits_list": qubits_list,
-            "num_configs_ratio": num_configs_ratio,
-            "environment": benchmark_environment(),
-        },
+        "metadata": {**metadata, "environment": benchmark_environment()},
         "data": [asdict(d) for d in data],
+        "missing": missing,
     }
     json_path = output_dir / "random_matrix_results.json"
     temp_path = json_path.with_suffix(".tmp")
@@ -83,7 +96,7 @@ def _estimate_method(
     bitstrings: list[str],
     coeffs: list[float],
     gf2x_max_qubits: int = 25,
-) -> tuple[ResourceEstimateData, ResourceEstimateData] | None:
+) -> MethodOutcome:
     """Run a single method and return its sparse and dense resource estimates.
 
     Args:
@@ -94,16 +107,17 @@ def _estimate_method(
         gf2x_max_qubits: Upper qubit limit for the ``"gf2x"`` method.
 
     Returns:
-        ``(sparse_est, dense_est)`` pair, or ``None`` if the method was
-        skipped or raised an exception.
+        A :class:`MethodOutcome` holding either the ``(sparse, dense)``
+        estimates or the reason the method was skipped or failed.
     """
     num_qubits = len(bitstrings[0])
     num_configs = len(bitstrings)
     if method_name == "gf2x" and num_qubits > gf2x_max_qubits:
+        reason = f"num_qubits={num_qubits} exceeds gf2x_max_qubits={gf2x_max_qubits}"
         Logger.info(
             f"Skipping {method_name} for q={num_qubits} (cap={gf2x_max_qubits})"
         )
-        return None
+        return MethodOutcome(status="skipped", reason=reason)
     methods: dict[
         str, Callable[..., tuple[ResourceEstimateData, ResourceEstimateData]]
     ] = {
@@ -114,13 +128,14 @@ def _estimate_method(
     }
     try:
         fn = methods[method_name]
-        return fn(bitstrings, coeffs)
+        return MethodOutcome(status="ok", estimates=fn(bitstrings, coeffs))
 
     except Exception as exc:
+        reason = f"{type(exc).__name__}: {exc}"
         Logger.warn(
             f"Method {method_name} failed (q={num_qubits}, configs={num_configs}): {exc}"
         )
-    return None
+        return MethodOutcome(status="failed", reason=reason)
 
 
 def run_benchmark(
@@ -147,14 +162,74 @@ def run_benchmark(
 
     Returns:
         List of :class:`BenchmarkResult`, one per (method, system) pair.
+
+    Raises:
+        ValueError: If *qubits_list* holds a value that is not a positive even
+            number. Half filling maps ``num_qubits`` onto ``num_qubits // 2``
+            spatial orbitals, so an odd count would be silently truncated and
+            the recorded label would not match the generated system.
     """
     if qubits_list is None:
         qubits_list = list(range(4, 20, 4)) + list(range(20, 61, 10))
+    invalid = [q for q in qubits_list if q <= 0 or q % 2 != 0]
+    if invalid:
+        raise ValueError(
+            "qubits_list must contain positive even qubit counts because the "
+            f"random systems are half-filled; got {invalid}"
+        )
     if methods is None:
         methods = METHOD_ORDER
+    requested_methods: list[str] = list(methods)
     coeff_rng = np.random.default_rng(seed=seed)
 
     data: list[BenchmarkResult] = []
+    missing: list[dict[str, Any]] = []
+    metadata: dict[str, Any] = {
+        "seed": seed,
+        "qubits_list": qubits_list,
+        "num_configs_ratio": num_configs_ratio,
+        "requested_methods": requested_methods,
+        "gf2x_max_qubits": gf2x_max_qubits,
+    }
+
+    def run_methods(
+        bitstrings: list[str],
+        coeffs: list[float],
+        num_qubits: int,
+        num_configs: int,
+        source: str,
+        molecule: str | None = None,
+    ) -> None:
+        """Run every requested method on one system and checkpoint each outcome."""
+        for method_name in requested_methods:
+            Logger.info(f"    Running {method_name} ...")
+            outcome = _estimate_method(method_name, bitstrings, coeffs, gf2x_max_qubits)
+            if outcome.estimates is None:
+                missing.append(
+                    {
+                        "method": method_name,
+                        "num_qubits": num_qubits,
+                        "num_dets": num_configs,
+                        "source": source,
+                        "molecule": molecule,
+                        "status": outcome.status,
+                        "reason": outcome.reason,
+                    }
+                )
+            else:
+                sparse_est, dense_est = outcome.estimates
+                data.append(
+                    BenchmarkResult(
+                        method=method_name,
+                        num_qubits=num_qubits,
+                        num_dets=num_configs,
+                        sparse=sparse_est,
+                        dense=dense_est,
+                        source=source,
+                        molecule=molecule,
+                    )
+                )
+            _save_checkpoint(data, missing, output_dir, metadata)
 
     # 1. Random Matrix Benchmark
     for num_qubits in qubits_list:
@@ -188,32 +263,7 @@ def run_benchmark(
         ]
         Logger.info(f"  q={num_qubits} configs={num_configs}")
 
-        for method_name in methods:
-            Logger.info(f"    Running {method_name} ...")
-            est = _estimate_method(
-                method_name, bitstrings, list(coeffs), gf2x_max_qubits
-            )
-            if est is None:
-                continue
-
-            sparse_est, dense_est = est
-            data.append(
-                BenchmarkResult(
-                    method=method_name,
-                    num_qubits=num_qubits,
-                    num_dets=num_configs,
-                    sparse=sparse_est,
-                    dense=dense_est,
-                    source="random",
-                )
-            )
-            _save_checkpoint(
-                data,
-                output_dir,
-                seed,
-                qubits_list,
-                num_configs_ratio,
-            )
+        run_methods(bitstrings, list(coeffs), num_qubits, num_configs, "random")
 
     # 2. Chemical Data Benchmark (from data/input_wavefunctions.json)
     if wfn_json.exists():
@@ -237,33 +287,14 @@ def run_benchmark(
 
             Logger.info(f"Chemical: {mol_name}  q={num_qubits} configs={num_configs}")
 
-            for method_name in methods:
-                Logger.info(f"    Running {method_name} ...")
-                est = _estimate_method(
-                    method_name, bitstrings, list(coeffs), gf2x_max_qubits
-                )
-                if est is None:
-                    continue
-
-                sparse_est, dense_est = est
-                data.append(
-                    BenchmarkResult(
-                        method=method_name,
-                        num_qubits=num_qubits,
-                        num_dets=num_configs,
-                        sparse=sparse_est,
-                        dense=dense_est,
-                        source="chemical",
-                        molecule=mol_name,
-                    )
-                )
-                _save_checkpoint(
-                    data,
-                    output_dir,
-                    seed,
-                    qubits_list,
-                    num_configs_ratio,
-                )
+            run_methods(
+                bitstrings,
+                list(coeffs),
+                num_qubits,
+                num_configs,
+                "chemical",
+                mol_name,
+            )
     else:
         Logger.warn(f"Chemical data not found at {wfn_json} — skipping")
 
@@ -439,6 +470,21 @@ def plot_scaled(data: list[BenchmarkResult], output_path: Path) -> None:
     Logger.info(f"Saved scaled plot: {output_path}")
 
 
+def _even_qubit_count(value: str) -> int:
+    """Parse ``--qubits`` entries, rejecting odd and non-positive counts.
+
+    The random systems are half-filled, so ``num_qubits`` is mapped onto
+    ``num_qubits // 2`` spatial orbitals. An odd count would be truncated and
+    the result would be labelled with a qubit count it was not generated for.
+    """
+    count = int(value)
+    if count <= 0 or count % 2 != 0:
+        raise argparse.ArgumentTypeError(
+            f"qubit count must be a positive even number, got {value}"
+        )
+    return count
+
+
 def main() -> None:
     """Parse command-line arguments and run the benchmark.
 
@@ -473,11 +519,14 @@ def main() -> None:
     )
     parser.add_argument(
         "--qubits",
-        type=int,
+        type=_even_qubit_count,
         nargs="+",
         default=list(range(4, 20, 4)) + list(range(20, 61, 10)),
         metavar="N",
-        help="Space-separated list of qubit counts to benchmark. Default: %(default)s",
+        help=(
+            "Space-separated list of qubit counts to benchmark. Must be "
+            "positive even numbers (half filling). Default: %(default)s"
+        ),
     )
     parser.add_argument(
         "--configs-ratio",

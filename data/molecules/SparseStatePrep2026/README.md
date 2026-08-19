@@ -16,12 +16,15 @@ determinant matrices and molecular wavefunctions.
 
 ## Reproducibility
 
-Use Python 3.12 in the qdk-chemistry dev container. Install the exact
-environment:
+Use Python 3.12 in the qdk-chemistry dev container. Install the pinned main
+dependencies:
 
 ```bash
 python -m pip install --requirement requirements-lock.txt
 ```
+
+`requirements-lock.txt` pins the direct dependencies only; their transitive
+dependencies are resolved at install time and may drift.
 
 The Rupprecht and Wolk reference implementation is distributed under Apache
 License 2.0 through immutable
@@ -62,7 +65,7 @@ SparseStatePrep2026/
 ├── estimate_random_matrix.py         # Run random and molecular benchmarks
 ├── generate_f2.py                    # Regenerate the paper F2 wavefunction
 ├── generate_random_matrix.py         # Generate random determinant matrices
-├── requirements-lock.txt             # Exact benchmark environment
+├── requirements-lock.txt             # Pinned main dependencies
 ├── state_preparation_methods.py      # Resource estimators for four methods
 ├── cgmanifest.json                   # Third-party component declarations
 ├── data/

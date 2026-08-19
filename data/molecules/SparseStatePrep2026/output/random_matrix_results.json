@@ -13,6 +13,13 @@
       60
     ],
     "num_configs_ratio": 1.0,
+    "requested_methods": [
+      "gf2x",
+      "Ramacciotti2024",
+      "gf2x_binary_encoding",
+      "Rupprecht2026"
+    ],
+    "gf2x_max_qubits": 25,
     "environment": {
       "python": "3.12.3",
       "platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
@@ -1374,6 +1381,44 @@
       },
       "source": "chemical",
       "molecule": "ozone"
+    }
+  ],
+  "missing": [
+    {
+      "method": "gf2x",
+      "num_qubits": 30,
+      "num_dets": 30,
+      "source": "random",
+      "molecule": null,
+      "status": "skipped",
+      "reason": "num_qubits=30 exceeds gf2x_max_qubits=25"
+    },
+    {
+      "method": "gf2x",
+      "num_qubits": 40,
+      "num_dets": 40,
+      "source": "random",
+      "molecule": null,
+      "status": "skipped",
+      "reason": "num_qubits=40 exceeds gf2x_max_qubits=25"
+    },
+    {
+      "method": "gf2x",
+      "num_qubits": 50,
+      "num_dets": 50,
+      "source": "random",
+      "molecule": null,
+      "status": "skipped",
+      "reason": "num_qubits=50 exceeds gf2x_max_qubits=25"
+    },
+    {
+      "method": "gf2x",
+      "num_qubits": 60,
+      "num_dets": 60,
+      "source": "random",
+      "molecule": null,
+      "status": "skipped",
+      "reason": "num_qubits=60 exceeds gf2x_max_qubits=25"
     }
   ]
 }
