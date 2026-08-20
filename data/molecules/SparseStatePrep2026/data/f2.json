@@ -1,0 +1,99 @@
+[
+  {
+    "structure": {
+      "num_atoms": 2,
+      "composition": "F2",
+      "total_mass_amu": 37.996,
+      "nuclear_repulsion_energy_eh": 30.69064592386509
+    },
+    "scf_energy_hartree": -198.50845418513973,
+    "orbitals_summary": {
+      "aos": 28,
+      "mos": 28,
+      "active_orbitals": {
+        "alpha": 8,
+        "beta": 8
+      },
+      "inactive_orbitals": {
+        "alpha": 4,
+        "beta": 4
+      }
+    },
+    "casci_energies_hartree": [
+      -198.5828871466729
+    ],
+    "initial_casci_energy_hartree": -198.5828871466729,
+    "hamiltonian_summaries": [
+      {
+        "active_orbitals": 8,
+        "total_orbitals": 28,
+        "core_energy": -165.21558173188447
+      }
+    ],
+    "sparse_ci_finder": {
+      "n_dets": 14,
+      "energy_hartree": -198.57651169075788,
+      "delta_e_mhartree": 6.3754559150197565,
+      "determinants": [
+        {
+          "det": "22222000",
+          "coeff": 0.9737146248188632
+        },
+        {
+          "det": "22022200",
+          "coeff": -0.20833221053506215
+        },
+        {
+          "det": "22202200",
+          "coeff": -0.04225170701154519
+        },
+        {
+          "det": "22220200",
+          "coeff": -0.04200707457691067
+        },
+        {
+          "det": "22u2dd0u",
+          "coeff": 0.025315443414249017
+        },
+        {
+          "det": "22d2uu0d",
+          "coeff": 0.025315443414250023
+        },
+        {
+          "det": "22ud2d0u",
+          "coeff": -0.02415025461106937
+        },
+        {
+          "det": "22du2u0d",
+          "coeff": -0.02415025461106857
+        },
+        {
+          "det": "22u2ud0d",
+          "coeff": -0.023177674694401677
+        },
+        {
+          "det": "22d2du0u",
+          "coeff": -0.02317767469440211
+        },
+        {
+          "det": "22uu2d0d",
+          "coeff": 0.022182967767769273
+        },
+        {
+          "det": "22dd2u0u",
+          "coeff": 0.022182967767759167
+        },
+        {
+          "det": "22220002",
+          "coeff": -0.01476765804268876
+        },
+        {
+          "det": "02222002",
+          "coeff": -0.01424234569659481
+        }
+      ]
+    },
+    "name": "F2",
+    "xyz": "2\n\nF        0.000000    0.000000    0.698313\nF        0.000000    0.000000   -0.698313"
+  }
+]

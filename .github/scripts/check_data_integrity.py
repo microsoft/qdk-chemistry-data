@@ -46,11 +46,17 @@ REQUIRED_SPARSE_CI_KEYS = {
     "determinants",
 }
 
+NON_DATA_JSON_FILENAMES = {"cgmanifest.json"}
+
 
 def check_dataset(dataset_dir: Path) -> list[str]:
     """Validate a single dataset directory. Returns a list of error messages."""
     errors: list[str] = []
-    json_files = list(dataset_dir.glob("*.json"))
+    json_files = [
+        path
+        for path in dataset_dir.glob("*.json")
+        if path.name not in NON_DATA_JSON_FILENAMES
+    ]
 
     if not json_files:
         errors.append(f"{dataset_dir.name}: No JSON data file found")
@@ -240,7 +246,10 @@ def main() -> int:
         if not dataset_dir.is_dir():
             continue
         # Only check directories that contain a JSON file (i.e. actual datasets)
-        if not list(dataset_dir.glob("*.json")):
+        if not any(
+            path.name not in NON_DATA_JSON_FILENAMES
+            for path in dataset_dir.glob("*.json")
+        ):
             continue
         print(f"Checking {dataset_dir.name}...")
         errors = check_dataset(dataset_dir)

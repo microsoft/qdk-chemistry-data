@@ -1,0 +1,110 @@
+{
+  "13Cyclohexadiene": {
+    "n_active_orbitals": 3,
+    "n_qubits": 6,
+    "bitstrings": [
+      "011011",
+      "101101",
+      "110110"
+    ],
+    "coeffs": [
+      -0.99147575,
+      0.11012891,
+      0.06962367
+    ]
+  },
+  "C4H8_diradical": {
+    "n_active_orbitals": 2,
+    "n_qubits": 4,
+    "bitstrings": [
+      "0101",
+      "1010"
+    ],
+    "coeffs": [
+      -0.76449687,
+      0.64462744
+    ]
+  },
+  "C5H10_diradical": {
+    "n_active_orbitals": 2,
+    "n_qubits": 4,
+    "bitstrings": [
+      "0101",
+      "1010"
+    ],
+    "coeffs": [
+      -0.71687957,
+      0.69719702
+    ]
+  },
+  "C6H10_diradical": {
+    "n_active_orbitals": 2,
+    "n_qubits": 4,
+    "bitstrings": [
+      "0101",
+      "1010",
+      "1001"
+    ],
+    "coeffs": [
+      -0.75144039,
+      0.65116339,
+      0.10641232
+    ]
+  },
+  "C6H12_diradical": {
+    "n_active_orbitals": 2,
+    "n_qubits": 4,
+    "bitstrings": [
+      "0101",
+      "1010"
+    ],
+    "coeffs": [
+      -0.71077583,
+      0.70341859
+    ]
+  },
+  "C8H12_diradical": {
+    "n_active_orbitals": 2,
+    "n_qubits": 4,
+    "bitstrings": [
+      "0101",
+      "1010"
+    ],
+    "coeffs": [
+      -0.76598193,
+      0.6428621
+    ]
+  },
+  "Norbornene": {
+    "n_active_orbitals": 2,
+    "n_qubits": 4,
+    "bitstrings": [
+      "0101",
+      "1010"
+    ],
+    "coeffs": [
+      -0.9917602,
+      0.1281082
+    ]
+  },
+  "ozone": {
+    "n_active_orbitals": 5,
+    "n_qubits": 10,
+    "bitstrings": [
+      "0001100011",
+      "0010100101",
+      "0011000110",
+      "0001100110",
+      "0011000011",
+      "0101001010"
+    ],
+    "coeffs": [
+      -0.93756298,
+      0.32348548,
+      0.09466198,
+      0.05969543,
+      0.05969543,
+      0.01564668
+    ]
+  }
+}
