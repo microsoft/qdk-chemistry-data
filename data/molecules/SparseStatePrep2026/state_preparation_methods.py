@@ -18,11 +18,12 @@ Also provides helpers shared across methods: ``estimate_bloq`` and
 # Licensed under the MIT License. See LICENSE in the project root for license information.
 # --------------------------------------------------------------------------------------------
 
+import platform
 from collections import Counter
+from collections.abc import Callable
 from dataclasses import dataclass
 from functools import cache
 from importlib.metadata import version as distribution_version
-import platform
 from typing import Any
 
 import numpy as np
@@ -59,11 +60,18 @@ except ImportError:
     )
 
 try:
-    from qualtran import QFxp
+    from qualtran import Bloq, QFxp
+    from qualtran.bloqs.mcmt import MultiTargetCNOT
     from qualtran.bloqs.state_preparation.sparse_state_preparation_via_rotations import (
         SparseStatePreparationViaRotations,
     )
-    from qualtran.resource_counting import QECGatesCost, QubitCount, get_cost_value
+    from qualtran.resource_counting import (
+        GateCounts,
+        QECGatesCost,
+        QubitCount,
+        get_bloq_callee_counts,
+        get_cost_value,
+    )
 except ImportError:
     raise ImportError("ERROR: qualtran is required. See README.md.")
 
@@ -91,6 +99,25 @@ _BASIS_GATES = [
 ]
 _CLIFFORD_GATES = {"x", "y", "z", "cx", "cz", "h", "s", "sdg", "swap"}
 _TOFFOLI_GATES = {"ccx", "ccz", "cswap"}
+
+
+class _DecomposedMultiTargetCNOTGatesCost(QECGatesCost):
+    """``QECGatesCost`` that resolves ``MultiTargetCNOT`` into its CNOT ladder.
+
+    Qualtran's default ``QECGatesCost`` scores ``MultiTargetCNOT(k)`` as a single
+    Clifford regardless of ``k``, whereas the QDK methods count every primitive 
+    ``cx`` left after transpilation.
+    """
+
+    def compute(
+        self, bloq: Bloq, get_callee_cost: Callable[[Bloq], GateCounts]
+    ) -> GateCounts:
+        if not isinstance(bloq, MultiTargetCNOT):
+            return super().compute(bloq, get_callee_cost)
+        totals = GateCounts()
+        for callee, times in get_bloq_callee_counts(bloq, ignore_decomp_failure=False):
+            totals += times * get_callee_cost(callee)
+        return totals
 
 
 @cache
@@ -196,6 +223,10 @@ def bitstring_from_qubit_occupations(occupations: np.ndarray) -> str:
 def estimate_bloq(bloq: Any) -> ResourceEstimateData:
     """Get resource estimates directly from a qualtran Bloq.
 
+    ``MultiTargetCNOT`` is expanded into its CNOT decomposition so that Clifford
+    counts are comparable with the transpiled QDK circuits; see
+    :class:`_DecomposedMultiTargetCNOTGatesCost`.
+
     Args:
         bloq (Any): A qualtran ``Bloq`` supporting ``QubitCount`` and
             ``QECGatesCost`` resource-counting protocols.
@@ -204,8 +235,8 @@ def estimate_bloq(bloq: Any) -> ResourceEstimateData:
         ResourceEstimateData: Resource estimate for the bloq.
     """
     qubit_count = get_cost_value(bloq, QubitCount())
-    gate_counts = get_cost_value(bloq, QECGatesCost())
-    toffoli = int(gate_counts.toffoli + gate_counts.and_bloq)
+    gate_counts = get_cost_value(bloq, _DecomposedMultiTargetCNOTGatesCost())
+    toffoli = int(gate_counts.toffoli + gate_counts.and_bloq + gate_counts.cswap)
     rotation = int(gate_counts.rotation)
     return ResourceEstimateData(
         logical_qubits=int(qubit_count),
@@ -418,7 +449,7 @@ def Rupprecht2026(
         states,
         coeffs_arr,
         QFxp(bitsize=phase_bitsize, num_frac=num_frac),
-        uncompute_in_isometry=True,
+        uncompute_in_isometry=False,
     )
     dense_bitsize = sparse_prep.isometry.subspace_bitsize
     dense_coeffs = getattr(sparse_prep, "_permuted_coefficients", None)

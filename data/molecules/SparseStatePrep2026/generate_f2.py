@@ -7,8 +7,16 @@
 
 import argparse
 import json
+import os
 from pathlib import Path
 from typing import Any
+
+# F2 has degenerate pi orbitals, so the CASCI eigenvector is
+# only defined up to a rotation within that degenerate subspace; the rotation
+# depends on the OpenMP reduction order, and the resulting truncation to the 14
+# largest determinants varies by a few mHa with thread count. Pinning to a single
+# thread makes the record reproducible independently of the host core count.
+os.environ["OMP_NUM_THREADS"] = "1"
 
 import numpy as np
 from qdk_chemistry.algorithms import create

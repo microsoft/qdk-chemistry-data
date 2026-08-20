@@ -42,6 +42,8 @@ from state_preparation_methods import (
     gf2x_binary_encoding,
 )
 
+DEFAULT_SEED = 42
+
 
 @dataclass
 class MethodOutcome:
@@ -141,7 +143,7 @@ def _estimate_method(
 def run_benchmark(
     wfn_json: Path,
     output_dir: Path,
-    seed: int = 1000,
+    seed: int = DEFAULT_SEED,
     qubits_list: list[int] | None = None,
     num_configs_ratio: float = 1,
     methods: list[str] | None = None,
@@ -180,7 +182,6 @@ def run_benchmark(
     if methods is None:
         methods = METHOD_ORDER
     requested_methods: list[str] = list(methods)
-    coeff_rng = np.random.default_rng(seed=seed)
 
     data: list[BenchmarkResult] = []
     missing: list[dict[str, Any]] = []
@@ -254,6 +255,7 @@ def run_benchmark(
         )
 
         # Generate real coefficients
+        coeff_rng = np.random.default_rng(seed=[seed, num_qubits])
         coeffs_raw = coeff_rng.random(num_configs) - 0.5
         coeffs = coeffs_raw / np.linalg.norm(coeffs_raw)
 
@@ -513,7 +515,7 @@ def main() -> None:
     parser.add_argument(
         "--seed",
         type=int,
-        default=42,
+        default=DEFAULT_SEED,
         metavar="N",
         help="RNG seed for coefficient generation. Default: %(default)s",
     )
