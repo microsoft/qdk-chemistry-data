@@ -50,8 +50,8 @@ def _random_excitation(
     """Generate a single random excitation from a reference determinant.
 
     Independently applies excitations in the alpha and beta spin channels.
-    The excitation order is randomly chosen between 1 and max_excitation_order.
-
+    The excitation order is randomly chosen between 0 and max_excitation_order
+    (inclusive); 0 means no excitation in that channel.
     Args:
         det (np.ndarray): Binary occupation vector of shape ``(2 * n_orbitals,)``
             representing the reference determinant (alpha block then beta block).

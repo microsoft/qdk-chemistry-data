@@ -53,11 +53,11 @@ except ImportError as exc:
 try:
     from sparse_state_preparation import SparseStatePreparation
     from sparse_state_preparation.isometry import IsometryToSubspaceViaBatching
-except ImportError:
+except ImportError as exc:
     raise ImportError(
         "ERROR: sparse_state_preparation from https://zenodo.org/records/18234600 "
         "is required. See README.md.",
-    )
+    ) from exc
 
 try:
     from qualtran import Bloq, QFxp
