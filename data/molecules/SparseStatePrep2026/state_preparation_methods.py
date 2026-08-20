@@ -105,7 +105,7 @@ class _DecomposedMultiTargetCNOTGatesCost(QECGatesCost):
     """``QECGatesCost`` that resolves ``MultiTargetCNOT`` into its CNOT ladder.
 
     Qualtran's default ``QECGatesCost`` scores ``MultiTargetCNOT(k)`` as a single
-    Clifford regardless of ``k``, whereas the QDK methods count every primitive 
+    Clifford regardless of ``k``, whereas the QDK methods count every primitive
     ``cx`` left after transpilation.
     """
 
