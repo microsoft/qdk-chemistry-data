@@ -1,4 +1,4 @@
-# FeMoco FCIDUMPs from Reiher et al.
+# FeMoco FCIDUMPs from Reiher et al. (2017)
 
 Original integral files for the two FeMoco models in [*Elucidating reaction mechanisms on quantum computers*](https://arxiv.org/abs/1605.03590) (arXiv, May 2016; PNAS, July 2017).
 
