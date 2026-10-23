@@ -21,8 +21,9 @@ bdd81245ad09f93031e1fa7f0e7f5328b7f220b9b1c27a8688b7941837584be8  XVIII-cas4-fb-
 ## Model and conventions
 
 - `XVIII` identifies the catalyst intermediate, not a transition state.
-- `cas4` identifies the CAS(4,4)SCF calculation used to generate the molecular orbitals, not the active space stored in this file.
-  The Hamiltonian contains 64 electrons in 56 spatial orbitals.
+- `cas4` means the molecular orbitals were optimized by CASSCF with a small active space of 4 electrons in 4 spatial orbitals, CAS(4,4).
+  The authors then selected a larger space from that orbital basis to generate this file's integrals: 64 electrons in 56 spatial orbitals.
+  This is a 64e/56o Hamiltonian in orbitals obtained from CASSCF(4,4), not a CASSCF(64,56) calculation (supplementary Table XVI).
 - `fb` denotes the full atomic orbital basis: ANO-RCC-VTZP for light elements and ANO-RCC-VQZP for ruthenium, with integrals generated using OpenMolcas.
 - The absence of `highCD` denotes the default integral-generation Cholesky decomposition threshold of `1e-4`, not the `1e-8` high-accuracy variant.
   This is separate from subsequent Hamiltonian truncation in quantum resource estimation.
