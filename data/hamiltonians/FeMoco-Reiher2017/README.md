@@ -13,7 +13,6 @@ Some redistributed copies replaced the original names with names based on Reiher
 [`aka.ms/fcidump/nitrogenase-54e-54o`](https://aka.ms/fcidump/nitrogenase-54e-54o) previously pointed to [`nitrogenase-54e-54o.fcidump`](https://github.com/microsoft/qdk/releases/download/v1.1.1/nitrogenase-54e-54o.fcidump), an asset on the [Microsoft QDK v1.1.1 release](https://github.com/microsoft/qdk/releases/tag/v1.1.1).
 That file uses LIQUiD two-electron index ordering under an FCIDUMP header.
 Read as a standard FCIDUMP, it gives the wrong Hamiltonian.
-
 The link now points to this repository.
 Other corrupt or incorrectly converted copies remain in circulation; use these originals.
 
