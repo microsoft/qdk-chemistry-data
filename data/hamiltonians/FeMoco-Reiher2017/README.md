@@ -14,7 +14,7 @@ Some redistributed copies replaced the original names with names based on Reiher
 That file uses LIQUiD two-electron index ordering under an FCIDUMP header.
 Read as a standard FCIDUMP, it gives the wrong Hamiltonian.
 The link now points to this repository.
-Other corrupt or incorrectly converted copies remain in circulation; use these originals.
+Other corrupt or incorrectly converted copies may still be in circulation from other sites; please use the versions of the FCIDUMP files from this repository with the citations below.
 
 ## Files
 
