@@ -19,7 +19,7 @@ QDK/Chemistry Data provides:
 | Dataset | Description | Entries |
 |---------|-------------|---------|
 | [SparseCI-24](data/molecules/SparseCI-24/) | Molecules with compact sparse CI wavefunctions (≤6 determinants, <1 mHa accuracy) | 24 |
-| [SparseStatePrep2026](data/molecules/SparseStatePrep2026/) | Sparse state preparation resource-estimation inputs, results, and scripts |  |
+| [SparseStatePrep2026](data/molecules/SparseStatePrep2026/) | Sparse state preparation resource-estimation inputs, results, and scripts | 9 |
 | [FeMoco-Reiher2017](data/hamiltonians/FeMoco-Reiher2017/) | Original FeMoco FCIDUMPs (54e/54o and 65e/57o) from Reiher et al., PNAS 2017 | 2 |
 
 ## Contributing
