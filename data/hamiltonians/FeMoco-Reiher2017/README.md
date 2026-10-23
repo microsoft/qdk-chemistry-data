@@ -19,25 +19,18 @@ Other corrupt or incorrectly converted copies remain in circulation; use these o
 
 ## Files
 
-| File | `S` | Charge | `orbsRAS` (e, o) | `targetCAS` (e, o) | Label | `MS2` | Scalar (Hartree) |
-| --- | ---: | ---: | ---: | ---: | --- | ---: | ---: |
-| [FeMoco_S0_charge+3_orbsRAS24.16_targetCAS54.54_test3.fcidump](./FeMoco_S0_charge+3_orbsRAS24.16_targetCAS54.54_test3.fcidump) | 0 | +3 | 24, 16 | 54, 54 | `test3` | 0 | -13212.970326 |
-| [FeMoco_S1.5_charge0_orbsRAS21.12_targetCAS65.57_test7_b.fcidump](./FeMoco_S1.5_charge0_orbsRAS21.12_targetCAS65.57_test7_b.fcidump) | 3/2 | 0 | 21, 12 | 65, 57 | `test7_b` | 3 | -13164.048069 |
+| File | Spin `S` | Charge | Active space (e, o) | Core energy (Ha) |
+| --- | ---: | ---: | ---: | ---: |
+| [FeMoco_S0_charge+3_orbsRAS24.16_targetCAS54.54_test3.fcidump](./FeMoco_S0_charge+3_orbsRAS24.16_targetCAS54.54_test3.fcidump) | 0 | +3 | 54, 54 | -13212.970326 |
+| [FeMoco_S1.5_charge0_orbsRAS21.12_targetCAS65.57_test7_b.fcidump](./FeMoco_S1.5_charge0_orbsRAS21.12_targetCAS65.57_test7_b.fcidump) | 3/2 | 0 | 65, 57 | -13164.048069 |
 
-- `S`: total spin of the calculation that generated the orbitals.
-- `orbsRAS`: active electrons and orbitals in the small CASSCF calculation whose natural orbitals form the orbital basis.
-  The target active space keeps the natural orbitals with occupations between 0.02 and 1.98 (54-orbital file) or 0.01 and 1.99 (57-orbital file), following Pulay's UNO-CAS criterion.
-- `targetCAS`: electrons and orbitals in the Hamiltonian stored in the file.
-- `MS2`: alpha minus beta electrons (`2S_z`).
-  The 65-electron file has 34 alpha and 31 beta electrons.
-
-The second structure was optimized using broken-symmetry DFT with `S_z = 1/2`, but its orbitals came from a quartet CASSCF calculation.
-
-These models use different FeMoco structures and separately generated orbitals.
-The 57-orbital file is not an extension of the 54-orbital file.
+- Spin `S`: total spin of the calculation that generated the orbitals (filename `S`).
+  The FCIDUMP header has `MS2` = 2S, so the 65-electron file has 34 alpha and 31 beta electrons.
+- Active space: electrons and orbitals in the Hamiltonian stored in the file (filename `targetCAS`).
+- Core energy: the constant `0 0 0 0` record (nuclear repulsion plus the energy of the frozen orbitals).
 
 The files use standard one-based FCIDUMP indices and chemists' ordering `(ij|kl)`; do not apply a LIQUiD reordering.
-Keep the `0 0 0 0` scalar record for absolute energies.
+Add the core energy to obtain absolute energies.
 
 SHA-256:
 
@@ -45,6 +38,15 @@ SHA-256:
 84f3a34d61cb1552797cc2574159ec4b6efa641c380631fb4f66be654a34940e  FeMoco_S0_charge+3_orbsRAS24.16_targetCAS54.54_test3.fcidump
 c3759d0bdc71801dc54f5f6536dd8b2d5fec16c6e0e57ae3dc22e4ef7a996073  FeMoco_S1.5_charge0_orbsRAS21.12_targetCAS65.57_test7_b.fcidump
 ```
+
+## How Reiher et al. generated the files
+
+Reiher et al. optimized two FeMoco structures with broken-symmetry DFT, ran a small CASSCF calculation on each, selected the target active space from its natural orbitals, and computed the integrals with Molcas.
+The two files therefore use different structures and orbitals.
+For details, see Appendix J of the arXiv preprint or Section 11 of the PNAS supporting information.
+
+The spin and charge states were chosen to test quantum algorithms and do not necessarily match the resting state of nitrogenase.
+Treat these files as benchmark Hamiltonians, not as models of the FeMoco ground state.
 
 ## Citation
 
