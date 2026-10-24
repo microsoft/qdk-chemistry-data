@@ -8,9 +8,6 @@ Hamiltonian for intermediate XVIII in ruthenium-catalyzed conversion of carbon d
 | --- | ---: | ---: | ---: |
 | [XVIII-cas4-fb-64e-56o.fcidump](./XVIII-cas4-fb-64e-56o.fcidump) | 64, 56 | 0 | -7180.18924584 |
 
-The [aka.ms short link](https://aka.ms/fcidump/XVIII-cas4-fb-64e-56o) will point to this repository.
-The file is unchanged from the [Microsoft QDK v1.1.1 release asset](https://github.com/microsoft/qdk/releases/download/v1.1.1/XVIII-cas4-fb-64e-56o.fcidump).
-
 SHA-256:
 
 ```text
