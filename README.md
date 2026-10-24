@@ -21,6 +21,7 @@ QDK/Chemistry Data provides:
 | [SparseCI-24](data/molecules/SparseCI-24/) | Molecules with compact sparse CI wavefunctions (≤6 determinants, <1 mHa accuracy) | 24 |
 | [SparseStatePrep2026](data/molecules/SparseStatePrep2026/) | Sparse state preparation resource-estimation inputs, results, and scripts | 9 |
 | [FeMoco-Reiher2017](data/hamiltonians/FeMoco-Reiher2017/) | Original FeMoco FCIDUMPs (54e/54o and 65e/57o) from Reiher et al., PNAS 2017 | 2 |
+| [RuCatalyst-vonBurg2021](data/hamiltonians/RuCatalyst-vonBurg2021/) | Ruthenium catalyst intermediate XVIII FCIDUMP (64e/56o) from von Burg et al., Phys. Rev. Research 2021 | 1 |
 
 ## Contributing
 
